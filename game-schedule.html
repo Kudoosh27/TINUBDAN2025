@@ -1,0 +1,879 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Russo+One&family=Lilita+One&family=Black+Ops+One&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --turquoise: #40E0D0;
+            --sand: #FFE5B4;
+            --purple: #800080;
+            --gold: #FFD700;
+        }
+        
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            background: linear-gradient(180deg, var(--turquoise) 0%, var(--sand) 100%);
+            font-family: 'Arial', sans-serif;
+            overflow-x: hidden;
+        }
+
+        .palm-leaf {
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath fill='%23228B22' d='M50,0 C70,30 90,60 90,80 C90,100 10,100 10,80 C10,60 30,30 50,0'/%3E%3C/svg%3E") no-repeat;
+            opacity: 0.2;
+        }
+
+        .palm-leaf:nth-child(1) { top: -50px; left: -50px; transform: rotate(45deg); }
+        .palm-leaf:nth-child(2) { top: -50px; right: -50px; transform: rotate(-45deg); }
+        .palm-leaf:nth-child(3) { bottom: -50px; left: -50px; transform: rotate(135deg); }
+        .palm-leaf:nth-child(4) { bottom: -50px; right: -50px; transform: rotate(-135deg); }
+
+        .content {
+            position: relative;
+            z-index: 1;
+            padding: 2rem;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .schedule-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .schedule-title {
+            font-family: 'Black Ops One', cursive;
+            font-size: 4rem;
+            color: var(--gold);
+            text-shadow: 
+                4px 4px 0 var(--purple),
+                8px 8px 0 rgba(0,0,0,0.2);
+            margin: 1rem 0;
+            text-transform: uppercase;
+        }
+
+        .date-nav {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .date-button {
+            font-family: 'Russo One', sans-serif;
+            background-color: var(--purple);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1.2rem;
+        }
+
+        .date-button.active {
+            background-color: var(--gold);
+            color: var(--purple);
+            transform: scale(1.05);
+        }
+
+        .date-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .schedule-card {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+
+        .schedule-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+
+        .time-slot {
+            font-family: 'Russo One', sans-serif;
+            color: var(--purple);
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid rgba(128, 0, 128, 0.2);
+        }
+
+        .event-details {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 0;
+        }
+
+        .event-name {
+            font-family: 'Lilita One', cursive;
+            font-size: 1.5rem;
+            color: var(--purple);
+        }
+
+        .event-location {
+            font-family: 'Russo One', sans-serif;
+            color: #666;
+            font-size: 1rem;
+            background-color: rgba(128, 0, 128, 0.1);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 3rem;
+            font-family: 'Russo One', sans-serif;
+            color: var(--purple);
+            font-size: 2rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .schedule-filters {
+            margin: 2rem 0;
+            display: none;
+        }
+
+        .schedule-filters.visible {
+            display: block;
+        }
+
+        .filter-section {
+            margin-bottom: 1rem;
+        }
+
+        .filter-checkboxes {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .filter-button {
+            font-family: 'Russo One', sans-serif;
+            background-color: var(--purple);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+        }
+
+        @media screen and (max-width: 768px) {
+            .schedule-title {
+                font-size: 2.5rem;
+            }
+
+            .date-nav {
+                flex-wrap: wrap;
+            }
+
+            .date-button {
+                font-size: 1rem;
+                padding: 0.5rem 1rem;
+            }
+
+            .event-details {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
+            }
+
+            .event-name {
+                font-size: 1.2rem;
+            }
+        }
+
+        @media screen and (max-width: 768px) {
+            .filter-checkboxes {
+                flex-direction: column;
+            }
+        }
+
+        /* Add Schedule Modal Styles */
+        .add-schedule-btn {
+            background-color: var(--gold);
+            color: var(--purple);
+            border: none;
+            padding: 10px 15px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-family: 'Russo One', sans-serif;
+            transition: all 0.3s ease;
+            margin-bottom: 1rem;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .add-schedule-btn:hover {
+            background-color: var(--purple);
+            color: var(--gold);
+            transform: scale(1.05);
+        }
+
+        .add-schedule-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .add-schedule-modal.visible {
+            display: flex;
+        }
+
+        .add-schedule-content {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            position: relative;
+        }
+
+        .add-schedule-close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--purple);
+            transition: color 0.3s ease;
+        }
+
+        .add-schedule-close:hover {
+            color: #ff0000;
+        }
+
+        .add-schedule-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            margin-bottom: 0.5rem;
+            font-family: 'Russo One', sans-serif;
+            color: var(--purple);
+        }
+
+        .form-group input, 
+        .form-group select {
+            padding: 0.5rem;
+            border: 1px solid var(--purple);
+            border-radius: 5px;
+            font-family: 'Arial', sans-serif;
+        }
+
+        .add-schedule-submit {
+            background-color: var(--purple);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-family: 'Russo One', sans-serif;
+            transition: background-color 0.3s ease;
+            margin-top: 1rem;
+        }
+
+        .add-schedule-submit:hover {
+            background-color: #5a0572;
+        }
+
+        @media screen and (max-width: 768px) {
+            .add-schedule-content {
+                width: 95%;
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="palm-leaf"></div>
+    <div class="palm-leaf"></div>
+    <div class="palm-leaf"></div>
+    <div class="palm-leaf"></div>
+    
+    <div class="content">
+        <div class="schedule-header">
+            <h1 class="schedule-title">GAME SCHEDULE</h1>
+        </div>
+
+        <div class="date-nav">
+            <button class="date-button">FEB 19</button>
+            <button class="date-button active">FEB 20</button>
+            <button class="date-button">FEB 21</button>
+            <button class="date-button">FEB 22</button>
+        </div>
+
+        <button id="toggleFiltersBtn" class="filter-button">Filter Game Schedule</button>
+
+        <button id="addScheduleBtn" class="add-schedule-btn">Add New Schedule</button>
+
+        <!-- Add Schedule Modal -->
+        <div id="addScheduleModal" class="add-schedule-modal">
+            <div class="add-schedule-content">
+                <span id="closeAddScheduleModal" class="add-schedule-close">&times;</span>
+                <h2 style="text-align: center; color: var(--purple); font-family: 'Black Ops One', cursive;">Add New Game Schedule</h2>
+                
+                <form id="addScheduleForm" class="add-schedule-form">
+                    <div class="form-group">
+                        <label for="eventType">Event Type</label>
+                        <select id="eventType" name="eventType" required>
+                            <option value="">Select Event Type</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="team1">Team 1</label>
+                        <select id="team1" name="team1" required>
+                            <option value="">Select Team 1</option>
+                            <option value="red-siargao">Red Siargao</option>
+                            <option value="green-palawan">Green Palawan</option>
+                            <option value="yellow-camiguin">Yellow Camiguin</option>
+                            <option value="blue-boracay">Blue Boracay</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="team2">Team 2</label>
+                        <select id="team2" name="team2" required>
+                            <option value="">Select Team 2</option>
+                            <option value="red-siargao">Red Siargao</option>
+                            <option value="green-palawan">Green Palawan</option>
+                            <option value="yellow-camiguin">Yellow Camiguin</option>
+                            <option value="blue-boracay">Blue Boracay</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="venue">Venue</label>
+                        <select id="venue" name="venue" required>
+                            <option value="">Select Venue</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="gameDate">Date</label>
+                        <input type="date" id="gameDate" name="gameDate" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="startTime">Start Time</label>
+                        <input type="time" id="startTime" name="startTime" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="endTime">End Time</label>
+                        <input type="time" id="endTime" name="endTime" required>
+                    </div>
+
+                    <button type="submit" class="add-schedule-submit">Add Schedule</button>
+                </form>
+            </div>
+        </div>
+
+        <div id="scheduleFilters" class="schedule-filters">
+            <div class="filter-section events-filter">
+                <h3>Select Events</h3>
+                <div class="filter-checkboxes">
+                    <label><input type="checkbox" name="event" value="basketball"> Basketball</label>
+                    <label><input type="checkbox" name="event" value="volleyball"> Volleyball</label>
+                    <label><input type="checkbox" name="event" value="soccer"> Soccer</label>
+                </div>
+            </div>
+
+            <div class="filter-section teams-filter">
+                <h3>Select Teams</h3>
+                <div class="filter-checkboxes">
+                    <label><input type="checkbox" name="team" value="red-siargao"> Red Siargao</label>
+                    <label><input type="checkbox" name="team" value="green-palawan"> Green Palawan</label>
+                    <label><input type="checkbox" name="team" value="yellow-camiguin"> Yellow Camiguin</label>
+                    <label><input type="checkbox" name="team" value="blue-boracay"> Blue Boracay</label>
+                </div>
+            </div>
+
+            <div class="filter-section area-filter">
+                <h3>Select Areas</h3>
+                <div class="filter-checkboxes">
+                    <label><input type="checkbox" name="area" value="main-court"> Main Court</label>
+                    <label><input type="checkbox" name="area" value="secondary-court"> Secondary Court</label>
+                    <label><input type="checkbox" name="area" value="outdoor-field"> Outdoor Field</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="date-buttons">
+            <button class="date-button active">Today</button>
+            <button class="date-button">Tomorrow</button>
+            <button class="date-button">This Week</button>
+        </div>
+        <!-- Schedule cards will now be dynamically added via JavaScript -->
+
+        <div class="footer">
+            TINUBDAN 2025
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Utility function for capitalizing words
+            function capitalizeWords(str) {
+                return str.replace(/-/g, ' ')
+                          .split(' ')
+                          .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+                          .join(' ');
+            }
+
+            // Improved time validation function
+            function validateTimeRange(startTime, endTime) {
+                const [startHours, startMinutes] = startTime.split(':').map(Number);
+                const [endHours, endMinutes] = endTime.split(':').map(Number);
+                
+                return (endHours > startHours) || 
+                       (endHours === startHours && endMinutes > startMinutes);
+            }
+
+            // Enhanced form submission handler
+            function handleScheduleSubmission(event) {
+                event.preventDefault();
+                
+                const eventType = document.getElementById('eventType').value;
+                let team1 = document.getElementById('team1').value;
+                let team2 = document.getElementById('team2').value;
+                const venueValue = document.getElementById('venue').value;
+                const gameDate = document.getElementById('gameDate').value;
+                const startTime = document.getElementById('startTime').value;
+                const endTime = document.getElementById('endTime').value;
+
+                // Venues mapping
+                const venues = {
+                    "Volleyball": "Field (in Front of I LOVE SPAC)",
+                    "World Volleyball": "Field (Center of the Field)",
+                    "Kickball": "Field (In front of Grand Stand)",
+                    "Mini Soccer": "Field (In front of College Library)",
+                    "Ultimate Frisbee": "Field (In front of Business Office)",
+                    "Basketball": "College Basketball Court",
+                    "Pickleball": "Academy Basketball Court",
+                    "Sepak Takraw": "Near the Fountain",
+                    "Mind Games": "West Hall Room (Above Guidance Office)",
+                    "Speediatrix": "Academy Complex",
+                    "Badminton": "Gym",
+                    "Table Tennis": "Gym",
+                    "Dodgeball": "Elementary Field",
+                    "Lawn Tennis": "Tennis Court"
+                };
+
+                // Find the full venue name
+                const venueFullName = Object.entries(venues)
+                    .find(([game]) => game.toLowerCase().replace(/ /g, '-') === venueValue)?.[1] || venueValue;
+
+                // Comprehensive form validation
+                const errors = [];
+                
+                // Modify team validation for "All Teams" events
+                const isAllTeamsEvent = eventType.includes('mind-games') || eventType.includes('speediatrix');
+                if (!isAllTeamsEvent) {
+                    if (team1 === team2) errors.push('Teams must be different');
+                }
+
+                if (!validateTimeRange(startTime, endTime)) errors.push('End time must be after start time');
+                if (!eventType) errors.push('Event type is required');
+                if (!venueValue) errors.push('Venue is required');
+
+                // Display all validation errors
+                if (errors.length > 0) {
+                    const errorMessage = errors.join('\n');
+                    const errorDisplay = document.getElementById('formErrors') || 
+                                         createErrorDisplayElement();
+                    errorDisplay.textContent = errorMessage;
+                    return;
+                }
+
+                // Create new schedule card with improved formatting
+                const scheduleContainer = document.querySelector('.content');
+                const newScheduleCard = document.createElement('div');
+                newScheduleCard.classList.add('schedule-card');
+                
+                // Modify event name display for "All Teams" events
+                const eventNameDisplay = isAllTeamsEvent 
+                    ? `${capitalizeWords(eventType)}: All Teams Participating`
+                    : `${capitalizeWords(eventType)}: ${capitalizeWords(team1)} vs ${capitalizeWords(team2)}`;
+
+                newScheduleCard.innerHTML = `
+                    <div class="time-slot">${startTime} - ${endTime}</div>
+                    <div class="event-details">
+                        <div class="event-name">${eventNameDisplay}</div>
+                        <div class="event-location">${capitalizeWords(venueFullName)}</div>
+                    </div>
+                `;
+                
+                // Insert new card
+                scheduleContainer.insertBefore(newScheduleCard, scheduleContainer.children[3]);
+
+                // Reset form and close modal
+                addScheduleForm.reset();
+                addScheduleModal.classList.remove('visible');
+            }
+
+            // Function to create error display element if not exists
+            function createErrorDisplayElement() {
+                const errorDisplay = document.createElement('div');
+                errorDisplay.id = 'formErrors';
+                errorDisplay.style.color = 'red';
+                errorDisplay.style.marginBottom = '10px';
+                addScheduleForm.insertBefore(errorDisplay, addScheduleForm.firstChild);
+                return errorDisplay;
+            }
+
+            // Function to handle automatic team selection for special events
+            function handleSpecialEventTeamSelection() {
+                const eventTypeSelect = document.getElementById('eventType');
+                const team1Input = document.getElementById('team1');
+                const team2Input = document.getElementById('team2');
+
+                eventTypeSelect.addEventListener('change', function() {
+                    const selectedEvent = this.value;
+                    const isAllTeamsEvent = 
+                        selectedEvent.includes('mind-games') || 
+                        selectedEvent.includes('speediatrix');
+
+                    if (isAllTeamsEvent) {
+                        // Disable team inputs and set default values
+                        team1Input.value = 'All Teams';
+                        team2Input.value = 'All Teams';
+                        team1Input.disabled = true;
+                        team2Input.disabled = true;
+                    } else {
+                        // Enable team inputs and clear values
+                        team1Input.value = '';
+                        team2Input.value = '';
+                        team1Input.disabled = false;
+                        team2Input.disabled = false;
+                    }
+                });
+            }
+
+            const toggleFiltersBtn = document.getElementById('toggleFiltersBtn');
+            const scheduleFilters = document.getElementById('scheduleFilters');
+            const scheduleCards = document.querySelectorAll('.schedule-card');
+            const eventCheckboxes = document.querySelectorAll('input[name="event"]');
+            const teamCheckboxes = document.querySelectorAll('input[name="team"]');
+            const areaCheckboxes = document.querySelectorAll('input[name="area"]');
+            const addScheduleBtn = document.getElementById('addScheduleBtn');
+            const addScheduleModal = document.getElementById('addScheduleModal');
+            const closeAddScheduleModal = document.getElementById('closeAddScheduleModal');
+            const addScheduleForm = document.getElementById('addScheduleForm');
+
+            // Hide add schedule button if in iframe
+            function checkIframeContext() {
+                const addScheduleBtn = document.getElementById('addScheduleBtn');
+                if (window.parent !== window) {
+                    // Page is in an iframe
+                    if (addScheduleBtn) {
+                        addScheduleBtn.style.display = 'none';
+                    }
+                }
+            }
+
+            // Call the function to check iframe context
+            checkIframeContext();
+
+            // Toggle filters visibility
+            toggleFiltersBtn.addEventListener('click', function() {
+                scheduleFilters.classList.toggle('visible');
+            });
+
+            function filterSchedule() {
+                const selectedEvents = Array.from(eventCheckboxes)
+                    .filter(checkbox => checkbox.checked)
+                    .map(checkbox => checkbox.value.toLowerCase());
+
+                const selectedTeams = Array.from(teamCheckboxes)
+                    .filter(checkbox => checkbox.checked)
+                    .map(checkbox => checkbox.value.toLowerCase().replace(' ', '-'));
+
+                const selectedAreas = Array.from(areaCheckboxes)
+                    .filter(checkbox => checkbox.checked)
+                    .map(checkbox => checkbox.value.toLowerCase().replace(' ', '-'));
+
+                scheduleCards.forEach(card => {
+                    const eventName = card.querySelector('.event-name').textContent.toLowerCase();
+                    const eventTeams = eventName.split(' vs ').map(team => team.trim().replace(' ', '-'));
+                    const eventLocation = card.querySelector('.event-location').textContent.toLowerCase().replace(' ', '-');
+
+                    const eventMatch = selectedEvents.length === 0 || 
+                        selectedEvents.some(event => eventName.includes(event));
+                    
+                    const teamMatch = selectedTeams.length === 0 || 
+                        selectedTeams.some(team => eventTeams.includes(team));
+                    
+                    const areaMatch = selectedAreas.length === 0 || 
+                        selectedAreas.includes(eventLocation);
+
+                    card.style.display = (eventMatch && teamMatch && areaMatch) ? 'block' : 'none';
+                });
+            }
+
+            // Add event listeners to all checkboxes
+            [...eventCheckboxes, ...teamCheckboxes, ...areaCheckboxes].forEach(checkbox => {
+                checkbox.addEventListener('change', filterSchedule);
+            });
+
+            addScheduleBtn.addEventListener('click', function() {
+                addScheduleModal.classList.add('visible');
+            });
+
+            closeAddScheduleModal.addEventListener('click', function() {
+                addScheduleModal.classList.remove('visible');
+            });
+
+            addScheduleModal.addEventListener('click', function(event) {
+                if (event.target === addScheduleModal) {
+                    addScheduleModal.classList.remove('visible');
+                }
+            });
+
+            addScheduleForm.addEventListener('submit', handleScheduleSubmission);
+
+            document.querySelectorAll('.date-button').forEach(button => {
+                button.addEventListener('click', () => {
+                    document.querySelectorAll('.date-button').forEach(b => b.classList.remove('active'));
+                    button.classList.add('active');
+                });
+            });
+
+            // Game Categories
+            const gameCategories = {
+                MAJOR: [
+                    {
+                        name: "BASKETBALL",
+                        divisions: [
+                            { category: "Men", type: "Open" },
+                            { category: "Women", type: "Open" },
+                            { category: "Elementary Boys", type: "Separate" }
+                        ]
+                    },
+                    {
+                        name: "VOLLEYBALL",
+                        divisions: [
+                            { category: "Men", type: "Open" },
+                            { category: "Women", type: "Open" },
+                            { category: "Elementary Girls", type: "Separate" }
+                        ]
+                    },
+                    {
+                        name: "ULTIMATE FRISBEE",
+                        divisions: [{ category: "Mix", type: "Open" }]
+                    },
+                    {
+                        name: "SEPAK TAKRAW",
+                        divisions: [{ category: "Men", type: "Open" }]
+                    },
+                    {
+                        name: "MINI SOCCER",
+                        divisions: [
+                            { category: "Men", type: "Open" },
+                            { category: "Women", type: "Open" }
+                        ]
+                    },
+                    {
+                        name: "KICKBALL",
+                        divisions: [{ category: "Open", type: "General" }]
+                    },
+                    {
+                        name: "WORLD VOLLEYBALL GAME",
+                        divisions: [{ category: "Open", type: "General" }]
+                    },
+                    {
+                        name: "DODGEBALL",
+                        divisions: [
+                            { category: "Mix", type: "Open" },
+                            { category: "Elementary Mix", type: "Separate" },
+                            { category: "Elementary", type: "Separate" }
+                        ]
+                    }
+                ],
+                AVERAGE: [
+                    {
+                        name: "BADMINTON",
+                        divisions: [
+                            { category: "Men Double", type: "Open" },
+                            { category: "Women Double", type: "Open" },
+                            { category: "Mix Double", type: "Open" },
+                            { category: "Elementary", type: "Separate" }
+                        ]
+                    },
+                    {
+                        name: "TABLE TENNIS",
+                        divisions: [
+                            { category: "Men Double", type: "Open" },
+                            { category: "Women Double", type: "Open" },
+                            { category: "Mix Double", type: "Open" }
+                        ]
+                    },
+                    {
+                        name: "LAWN TENNIS",
+                        divisions: [
+                            { category: "Men Double", type: "Open" },
+                            { category: "Women Double", type: "Open" },
+                            { category: "Mix Double", type: "Open" },
+                            { category: "Elementary", type: "Separate" }
+                        ]
+                    },
+                    {
+                        name: "DART",
+                        divisions: [
+                            { category: "Men Double", type: "Open" },
+                            { category: "Women Double", type: "Open" },
+                            { category: "Mix Double", type: "Open" }
+                        ]
+                    },
+                    {
+                        name: "PICKLEBALL",
+                        divisions: [{ category: "Mix", type: "Open" }]
+                    }
+                ],
+                MIND_GAMES: [
+                    {
+                        name: "MIND GAMES",
+                        divisions: [
+                            { category: "Word Factory", type: "All Teams" },
+                            { category: "Scrabble", type: "All Teams" },
+                            { category: "Sudoku", type: "All Teams" },
+                            { category: "Word Search", type: "All Teams" },
+                            { category: "Four in a Row", type: "All Teams" },
+                            { category: "Rubik's Cube", type: "All Teams" }
+                        ]
+                    }
+                ],
+                SPEEDIATRIX: [
+                    {
+                        name: "SPEEDIATRIX",
+                        divisions: [
+                            { category: "Declamation", type: "All Teams" },
+                            { category: "Spelling Bee", type: "All Teams" },
+                            { category: "Extemporaneous Speech", type: "All Teams" },
+                            { category: "Quiz Bowl", type: "All Teams" },
+                            { category: "Storytelling", type: "All Teams" },
+                            { category: "Spoken Word Poetry", type: "All Teams" },
+                            { category: "Traditional and Digital Poster-Making Contest", type: "All Teams" }
+                        ]
+                    }
+                ]
+            };
+
+            // Update venues mapping to include Mind Games and Speediatrix venues
+            const venues = {
+                "Volleyball": "Field (in Front of I LOVE SPAC)",
+                "World Volleyball": "Field (Center of the Field)",
+                "Kickball": "Field (In front of Grand Stand)",
+                "Mini Soccer": "Field (In front of College Library)",
+                "Ultimate Frisbee": "Field (In front of Business Office)",
+                "Basketball": "College Basketball Court",
+                "Pickleball": "Academy Basketball Court",
+                "Sepak Takraw": "Near the Fountain",
+                "Mind Games": "West Hall Room (Above Guidance Office)",
+                "Speediatrix": "Academy Complex",
+                "Badminton": "Gym",
+                "Table Tennis": "Gym",
+                "Dodgeball": "Elementary Field",
+                "Lawn Tennis": "Tennis Court"   
+            };
+
+            // Modify populateEventTypeDropdown to include new event categories
+            function populateEventTypeDropdown() {
+                const eventTypeSelect = document.getElementById('eventType');
+                
+                // Clear existing options
+                eventTypeSelect.innerHTML = '<option value="">Select Event Type</option>';
+
+                // Add existing categories
+                const categoryOrder = ['MAJOR', 'AVERAGE', 'MIND_GAMES', 'SPEEDIATRIX'];
+                const categoryLabels = {
+                    'MAJOR': 'MAJOR EVENTS',
+                    'AVERAGE': 'AVERAGE EVENTS',
+                    'MIND_GAMES': 'MIND GAMES',
+                    'SPEEDIATRIX': 'SPEEDIATRIX'
+                };
+
+                categoryOrder.forEach(categoryKey => {
+                    const optgroup = document.createElement('optgroup');
+                    optgroup.label = categoryLabels[categoryKey];
+
+                    gameCategories[categoryKey].forEach(game => {
+                        game.divisions.forEach(division => {
+                            const option = document.createElement('option');
+                            option.value = `${game.name} ${division.category}`.toLowerCase().replace(/ /g, '-');
+                            option.textContent = `${game.name} - ${division.category}`;
+                            optgroup.appendChild(option);
+                        });
+                    });
+
+                    eventTypeSelect.appendChild(optgroup);
+                });
+            }
+
+            // Dynamically populate venue dropdown
+            function populateVenueDropdown() {
+                const venueSelect = document.getElementById('venue');
+                
+                // Clear existing options
+                venueSelect.innerHTML = '<option value="">Select Venue</option>';
+
+                // Sort venues alphabetically
+                const sortedVenues = Object.entries(venues)
+                    .sort(([a], [b]) => a.localeCompare(b));
+
+                sortedVenues.forEach(([game, location]) => {
+                    const option = document.createElement('option');
+                    option.value = game.toLowerCase().replace(/ /g, '-');
+                    option.textContent = `${game} - ${location}`;
+                    venueSelect.appendChild(option);
+                });
+            }
+
+            // Call functions to populate dropdowns
+            populateEventTypeDropdown();
+            populateVenueDropdown();
+
+            // Call the new function to handle special event team selection
+            handleSpecialEventTeamSelection();
+        });
+    </script>
+</body>
+</html>

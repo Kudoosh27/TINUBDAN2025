@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tinubdan 2025 - SPAC</title>
+    <!-- Optimize Google Fonts loading -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Russo+One&family=Lilita+One&family=Black+Ops+One&display=swap" rel="stylesheet">
+    
+    <!-- Inline critical styles -->
+    <style>
+        :root {
+            --turquoise: #40E0D0;
+            --sand: #FFE5B4;
+            --purple: #800080;
+            --gold: #FFD700;
+        }
+        
+        /* Critical above-the-fold styles */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(180deg, var(--turquoise) 0%, var(--sand) 100%);
+            min-height: 100vh;
+        }
+        
+        .header {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 80vh;
+            text-align: center;
+            padding: 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .college-name {
+            font-family: 'Russo One', sans-serif;
+            font-size: 2.5rem;
+            color: #000;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .title {
+            font-family: 'Black Ops One', cursive;
+            font-size: 6rem;
+            color: #FFD700;
+            text-shadow: 
+                6px 6px 0 #800080,
+                12px 12px 0 rgba(0,0,0,0.2);
+            margin: 1rem 0;
+            text-transform: uppercase;
+            line-height: 1.2;
+        }
+
+        .tagline {
+            font-family: 'Lilita One', cursive;
+            font-size: 2.5rem;
+            color: #800080;
+            text-shadow: 3px 3px 0 #FFD700;
+            margin: 2rem 0;
+            line-height: 1.4;
+        }
+
+        .dates {
+            font-family: 'Russo One', sans-serif;
+            color: #000;
+            font-size: 2rem;
+            margin: 1rem 0;
+            letter-spacing: 2px;
+        }
+
+        .institution-logo {
+            width: auto;
+            height: 100px;  /* Matches 1.5rem * 20px */
+            object-fit: contain;
+            background: transparent;
+            padding: 0;
+            box-shadow: none;
+        }
+
+        .institution-logos {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        .palm-leaves {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .palm-leaf {
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath fill='%23228B22' d='M50,0 C70,30 90,60 90,80 C90,100 10,100 10,80 C10,60 30,30 50,0'/%3E%3C/svg%3E") no-repeat;
+            opacity: 0.2;
+            transition: transform 0.1s ease-out;
+        }
+
+        .palm-leaf:nth-child(1) { top: -50px; left: -50px; transform: rotate(45deg); }
+        .palm-leaf:nth-child(2) { top: -50px; right: -50px; transform: rotate(-45deg); }
+        .palm-leaf:nth-child(3) { bottom: -50px; left: -50px; transform: rotate(135deg); }
+        .palm-leaf:nth-child(4) { bottom: -50px; right: -50px; transform: rotate(-135deg); }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .teams-section-title {
+            font-family: 'Lilita One', cursive;
+            color: var(--purple);
+            text-align: center;
+            font-size: 3rem;
+            margin-bottom: 2rem;
+            text-shadow: 2px 2px 0 #FFD700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .teams-section-title.slide-section {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.8s ease-out;
+        }
+
+        .teams-section-title.slide-section.slide-in {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .team-emblems {
+            display: grid;
+            grid-template-columns: repeat(2, auto);
+            gap: 3rem 4rem;
+            margin: 1rem 0 2rem 0;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            max-width: 1000px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .team-emblem-container {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            justify-content: center;
+            opacity: 0;
+            transition: all 0.8s ease-out;
+        }
+
+        .team-emblem-container:nth-child(odd) {
+            transform: translateX(-50px);
+        }
+
+        .team-emblem-container:nth-child(even) {
+            transform: translateX(50px);
+        }
+
+        .team-emblem-container.fade-in {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .team-emblem {
+            background: transparent;
+            border-radius: 50%;
+            padding: 1rem;
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 250px;
+            height: 250px;
+            max-width: 250px;
+            max-height: 250px;
+            margin: 0 auto;
+        }
+
+        .team-emblem img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            aspect-ratio: 1;
+        }
+
+        .team-name {
+            background-color: var(--purple);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 30px;
+            font-family: 'Russo One', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            white-space: nowrap;
+            font-size: 1.2rem;
+            min-width: 200px;
+            text-align: center;
+        }
+
+        .section {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .section h2 {
+            font-family: 'Lilita One', cursive;
+            color: var(--purple);
+            text-align: center;
+            margin-top: 0;
+            font-size: 1.8rem;
+        }
+
+        iframe {
+            border: none;
+            border-radius: 0.5rem;
+            width: 100%;
+            background: white;
+        }
+
+        /* Scroll Animation Styles */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideInLeft {
+            from { opacity: 0; transform: translateX(-50px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        @keyframes slideInRight {
+            from { opacity: 0; transform: translateX(50px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .fade-section {
+            opacity: 0;
+            transition: all 0.8s ease-out;
+        }
+
+        .fade-section.fade-in {
+            opacity: 1;
+            animation: fadeIn 1s forwards;
+        }
+
+        .slide-section {
+            opacity: 0;
+            transition: all 0.8s ease-out;
+        }
+
+        .slide-section.slide-in-left {
+            animation: slideInLeft 1s forwards;
+        }
+
+        .slide-section.slide-in-right {
+            animation: slideInRight 1s forwards;
+        }
+
+        /* Mobile Responsiveness */
+        @media screen and (max-width: 768px) {
+            .header {
+                min-height: 100vh;
+                padding: 1rem;
+            }
+
+            .college-name {
+                font-size: 1.8rem;
+                letter-spacing: 1px;
+            }
+
+            .title {
+                font-size: 3.5rem;
+                text-shadow: 
+                    4px 4px 0 #800080,
+                    8px 8px 0 rgba(0,0,0,0.2);
+            }
+
+            .tagline {
+                font-size: 1.8rem;
+                text-shadow: 2px 2px 0 #FFD700;
+                margin: 1rem 0;
+                text-align: center;
+            }
+
+            .dates {
+                font-size: 1.5rem;
+                letter-spacing: 1px;
+            }
+
+            .institution-logo {
+                width: auto;
+                height: 70px;
+            }
+
+            .team-emblems {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .team-emblem-container {
+                flex-direction: column;
+                align-items: center;
+                gap: 1rem;
+            }
+
+            .team-emblem {
+                width: 200px;
+                height: 200px;
+                max-width: 200px;
+                max-height: 200px;
+            }
+
+            .team-name {
+                min-width: 180px;
+                padding: 0.5rem 1rem;
+                font-size: 1rem;
+            }
+
+            .teams-section-title {
+                font-size: 2.5rem;
+            }
+        }
+
+        /* Ensure full-width layout on small screens */
+        @media screen and (max-width: 480px) {
+            body {
+                overflow-x: hidden;
+            }
+
+            .container {
+                padding: 1rem;
+            }
+        }
+
+        /* Comprehensive Table Styling */
+        .locations-table, 
+        .schedule-table, 
+        .leaderboard-table, 
+        .results-table {
+            width: 100%;
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+
+        .locations-table thead, 
+        .schedule-table thead, 
+        .leaderboard-table thead, 
+        .results-table thead {
+            background: linear-gradient(135deg, var(--purple), #6a0572);
+            color: white;
+        }
+
+        .locations-table th, 
+        .schedule-table th, 
+        .leaderboard-table th, 
+        .results-table th {
+            padding: 15px;
+            text-align: left;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            font-weight: 600;
+            border-bottom: 2px solid rgba(255,255,255,0.2);
+        }
+
+        .locations-table td, 
+        .schedule-table td, 
+        .leaderboard-table td, 
+        .results-table td {
+            padding: 15px;
+            border-bottom: 1px solid #e0e0e0;
+            transition: all 0.3s ease;
+        }
+
+        .locations-table tr:nth-child(even), 
+        .schedule-table tr:nth-child(even), 
+        .leaderboard-table tr:nth-child(even), 
+        .results-table tr:nth-child(even) {
+            background-color: rgba(128, 0, 128, 0.05);
+        }
+
+        .locations-table tr:hover, 
+        .schedule-table tr:hover, 
+        .leaderboard-table tr:hover, 
+        .results-table tr:hover {
+            background-color: rgba(128, 0, 128, 0.1);
+            transform: scale(1.01);
+        }
+
+        /* Leaderboard Specific Styling */
+        .leaderboard-table tr:first-child td {
+            font-weight: bold;
+            color: var(--purple);
+            background-color: rgba(128, 0, 128, 0.1);
+        }
+
+        .leaderboard-table tr:first-child {
+            border-bottom: 3px solid var(--purple);
+        }
+
+        /* Responsive Design */
+        @media screen and (max-width: 768px) {
+            .locations-table, 
+            .schedule-table, 
+            .leaderboard-table, 
+            .results-table {
+                font-size: 0.9rem;
+            }
+
+            .locations-table th, 
+            .schedule-table th, 
+            .leaderboard-table th, 
+            .results-table th {
+                padding: 10px;
+                font-size: 0.8rem;
+            }
+
+            .locations-table td, 
+            .schedule-table td, 
+            .leaderboard-table td, 
+            .results-table td {
+                padding: 10px;
+            }
+        }
+
+        /* Specific Highlight Styles */
+        .leaderboard-table tr:nth-child(1) {
+            background-color: rgba(255, 215, 0, 0.2); /* Gold highlight for first place */
+        }
+
+        .leaderboard-table tr:nth-child(2) {
+            background-color: rgba(192, 192, 192, 0.2); /* Silver highlight for second place */
+        }
+
+        .leaderboard-table tr:nth-child(3) {
+            background-color: rgba(205, 127, 50, 0.2); /* Bronze highlight for third place */
+        }
+
+        /* Event Results Specific Styling */
+        .results-table tr[data-status="completed"] {
+            background-color: rgba(0, 255, 0, 0.1);
+        }
+
+        .results-table tr[data-status="upcoming"] {
+            background-color: rgba(255, 165, 0, 0.1);
+        }
+
+        /* Animated Hover Effect */
+        @keyframes tableHover {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+            100% { transform: scale(1); }
+        }
+
+        .locations-table tr:hover, 
+        .schedule-table tr:hover, 
+        .leaderboard-table tr:hover, 
+        .results-table tr:hover {
+            animation: tableHover 0.5s ease;
+        }
+
+        /* Location Gallery Styles */
+        .location-gallery {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+            padding: 20px 0;
+        }
+
+        .location-item {
+            flex: 1;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .location-item:hover {
+            transform: scale(1.05);
+        }
+
+        .location-image {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+        }
+
+        .location-details {
+            padding: 15px;
+            background-color: rgba(128, 0, 128, 0.05);
+        }
+
+        .location-details h3 {
+            margin-top: 0;
+            color: var(--purple);
+            border-bottom: 2px solid var(--gold);
+            padding-bottom: 10px;
+        }
+
+        .location-details p {
+            margin: 5px 0;
+            color: #333;
+        }
+
+        .location-map {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .full-width-map {
+            width: 100%;
+            height: auto;
+            object-fit: contain;
+            display: block;
+        }
+
+        .location-map:hover {
+            transform: scale(1.02);
+        }
+    </style>
+</head>
+<body>
+    <div class="palm-leaves">
+        <div class="palm-leaf"></div>
+        <div class="palm-leaf"></div>
+        <div class="palm-leaf"></div>
+        <div class="palm-leaf"></div>
+    </div>
+
+    <div class="header">
+        <div class="institution-logos">
+            <img src="student_council-removebg-preview.png" alt="South Philippine Adventist College Student Council Logo" class="institution-logo">
+        </div>
+        <div class="college-name">SOUTH PHILIPPINE ADVENTIST COLLEGE</div>
+        <h1 class="title">TINUBDAN 2025</h1>
+        <div class="tagline">Bulawanong Kagahapon,<br>Atong Pasidunggan Karon</div>
+        <div class="dates">FEBRUARY 19-22, 2025</div>
+    </div>
+
+    <div class="container">
+        <h2 class="teams-section-title slide-section">TEAMS</h2>
+        <div class="team-emblems">
+            <div class="team-emblem-container fade-section">
+                <div class="team-emblem">
+                    <img src="red_siargao-removebg-preview.png" alt="Red Siargao Team" />
+                </div>
+                <div class="team-name">RED SIARGAO</div>
+            </div>
+            <div class="team-emblem-container fade-section">
+                <div class="team-emblem">
+                    <img src="green_palawan-removebg-preview.png" alt="Green Palawan Team" />
+                </div>
+                <div class="team-name">GREEN PALAWAN</div>
+            </div>
+            <div class="team-emblem-container fade-section">
+                <div class="team-emblem">
+                    <img src="yellow_camiguin-removebg-preview.png" alt="Yellow Camiguin Team" />
+                </div>
+                <div class="team-name">YELLOW CAMIGUIN</div>
+            </div>
+            <div class="team-emblem-container fade-section">
+                <div class="team-emblem">
+                    <img src="blue_boracay-removebg-preview.png" alt="Blue Boracay Team" />
+                </div>
+                <div class="team-name">BLUE BORACAY</div>
+            </div>
+        </div>
+
+        <div id="leaderboard" class="section fade-section">
+            <h2>🏆 Leaderboard</h2>
+            <iframe 
+                src="leaderboards.html" 
+                width="100%" 
+                height="400" 
+                frameborder="0" 
+                scrolling="yes" 
+                title="Leaderboard Table">
+            </iframe>
+        </div>
+
+        <div id="event-locations" class="section fade-section">
+            <h2>🏟️ Event Locations</h2>
+            <div class="location-map">
+                <img src="476722956_942546187992853_7182961808092369392_n.jpg" 
+                     alt="Tinubdan 2025 Event Locations Map" 
+                     class="full-width-map" 
+                     title="Event Locations Across Venues">
+            </div>
+        </div>
+
+        <div id="game-schedule" class="section fade-section">
+            <h2>📅 Game Schedule</h2>
+            <iframe 
+                src="game-schedule.html" 
+                width="100%" 
+                height="500" 
+                frameborder="0" 
+                scrolling="auto" 
+                title="Game Schedule">
+            </iframe>
+        </div>
+
+        <div id="event-results" class="section fade-section">
+            <h2>🏅 Event Results</h2>
+            <iframe 
+                src="event-result.html" 
+                width="100%" 
+                height="500" 
+                frameborder="0" 
+                scrolling="auto" 
+                title="Event Results">
+            </iframe>
+        </div>
+    </div>
+
+    <script>
+        class TinubdanEditor {
+            constructor() {
+                this.storage = {
+                    createBackup: () => {
+                        return {
+                            timestamp: new Date().toISOString(),
+                            iframeSources: this.collectIframeSources(),
+                            mapImage: this.collectMapImage()
+                        };
+                    },
+                    restoreFromBackup: (backup) => {
+                        this.restoreIframeSources(backup.iframeSources);
+                        this.restoreMapImage(backup.mapImage);
+                    }
+                };
+            }
+
+            collectIframeSources() {
+                const iframes = document.querySelectorAll('iframe');
+                return Array.from(iframes).map(iframe => ({
+                    id: iframe.closest('.section').id,
+                    src: iframe.src
+                }));
+            }
+
+            restoreIframeSources(sources) {
+                sources.forEach(source => {
+                    const section = document.getElementById(source.id);
+                    if (section) {
+                        const iframe = section.querySelector('iframe');
+                        if (iframe) {
+                            iframe.src = source.src;
+                        }
+                    }
+                });
+            }
+
+            collectMapImage() {
+                const mapImage = document.querySelector('.full-width-map');
+                return {
+                    src: mapImage.src,
+                    alt: mapImage.alt,
+                    title: mapImage.title
+                };
+            }
+
+            restoreMapImage(imageData) {
+                const mapImage = document.querySelector('.full-width-map');
+                if (mapImage) {
+                    mapImage.src = imageData.src;
+                    mapImage.alt = imageData.alt;
+                    mapImage.title = imageData.title;
+                }
+            }
+
+            loadSavedChanges() {
+                console.log('Event locations map loaded');
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const editor = new TinubdanEditor();
+            editor.loadSavedChanges();
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.1
+            };
+
+            const fadeInObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('fade-in');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, observerOptions);
+
+            const slideInObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('slide-in');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, observerOptions);
+
+            document.querySelectorAll('.fade-section').forEach(section => {
+                fadeInObserver.observe(section);
+            });
+
+            document.querySelectorAll('.slide-section').forEach(section => {
+                slideInObserver.observe(section);
+            });
+
+            window.addEventListener('scroll', () => {
+                const scrollPosition = window.pageYOffset;
+                document.querySelectorAll('.palm-leaf').forEach((leaf, index) => {
+                    const speed = (index + 1) * 0.3;
+                    leaf.style.transform = `translateY(${scrollPosition * speed}px) rotate(${45 * (index + 1)}deg)`;
+                });
+            });
+        });
+    </script>
+</body>
+</html>

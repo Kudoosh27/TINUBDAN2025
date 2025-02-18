@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Russo+One&family=Lilita+One&family=Black+Ops+One&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --turquoise: #40E0D0;
+            --sand: #FFE5B4;
+            --purple: #800080;
+            --gold: #FFD700;
+        }
+        
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            background: linear-gradient(180deg, var(--turquoise) 0%, var(--sand) 100%);
+            font-family: 'Arial', sans-serif;
+            overflow-x: hidden;
+        }
+
+        .palm-leaf {
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath fill='%23228B22' d='M50,0 C70,30 90,60 90,80 C90,100 10,100 10,80 C10,60 30,30 50,0'/%3E%3C/svg%3E") no-repeat;
+            opacity: 0.2;
+        }
+
+        .palm-leaf:nth-child(1) { top: -50px; left: -50px; transform: rotate(45deg); }
+        .palm-leaf:nth-child(2) { top: -50px; right: -50px; transform: rotate(-45deg); }
+        .palm-leaf:nth-child(3) { bottom: -50px; left: -50px; transform: rotate(135deg); }
+        .palm-leaf:nth-child(4) { bottom: -50px; right: -50px; transform: rotate(-135deg); }
+
+        .content {
+            position: relative;
+            z-index: 1;
+            padding: 2rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .standings-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .standings-title {
+            font-family: 'Black Ops One', cursive;
+            font-size: 4rem;
+            color: var(--gold);
+            text-shadow: 
+                4px 4px 0 var(--purple),
+                8px 8px 0 rgba(0,0,0,0.2);
+            margin: 1rem 0;
+            text-transform: uppercase;
+        }
+
+        .standings-date {
+            font-family: 'Russo One', sans-serif;
+            color: #000;
+            font-size: 1.5rem;
+            margin-top: 0.5rem;
+            letter-spacing: 2px;
+        }
+
+        .team-card {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            padding: 1.5rem 2rem;
+            margin-bottom: 1.5rem;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .team-info {
+            display: flex;
+            align-items: center;
+            position: relative;
+            width: 100%;
+        }
+
+        .team-logo {
+            position: absolute;
+            left: -30px; 
+            width: 100px; 
+            height: 100px;
+            object-fit: contain;
+            z-index: 1;
+            transition: transform 0.3s ease;
+        }
+
+        .team-card:hover .team-logo {
+            transform: scale(1.1);
+        }
+
+        .team-name {
+            margin-left: 80px; 
+            font-family: 'Lilita One', cursive;
+            font-size: 2rem;
+            color: var(--purple);
+            text-shadow: 1px 1px 0 rgba(0,0,0,0.1);
+        }
+
+        .team-points {
+            font-family: 'Russo One', sans-serif;
+            font-size: 2.5rem;
+            color: var(--purple);
+            text-shadow: 2px 2px 0 rgba(0,0,0,0.1);
+        }
+
+        .team-card:nth-child(1) { 
+            background: rgba(255, 0, 0, 0.1); 
+        }
+        .team-card:nth-child(2) { 
+            background: rgba(0, 255, 0, 0.1); 
+        }
+        .team-card:nth-child(3) { 
+            background: rgba(255, 255, 0, 0.1); 
+        }
+        .team-card:nth-child(4) { 
+            background: rgba(0, 0, 255, 0.1); 
+        }
+
+        .edit-controls {
+            display: none; /* Hidden by default */
+            transition: all 0.3s ease;
+        }
+
+        .toggle-edit-btn {
+            background-color: var(--purple);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: background-color 0.3s ease;
+        }
+
+        .toggle-edit-btn:hover {
+            background-color: #5a0572;
+        }
+
+        .edit-controls.visible {
+            display: flex;
+        }
+
+        .score-input {
+            width: 60px;
+            margin-right: 10px;
+            padding: 5px;
+            border: 1px solid var(--purple);
+            border-radius: 5px;
+        }
+
+        .add-score-btn {
+            background-color: var(--purple);
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .add-score-btn:hover {
+            background-color: #5a0572;
+        }
+
+        .reset-scores-btn {
+            background-color: #ff4136;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 15px;
+            margin-left: 10px;
+            transition: background-color 0.3s ease;
+        }
+
+        .reset-scores-btn:hover {
+            background-color: #cc1f00;
+        }
+
+        @media screen and (max-width: 768px) {
+            .standings-title {
+                font-size: 2.5rem;
+            }
+
+            .standings-date {
+                font-size: 1.2rem;
+            }
+
+            .team-card {
+                padding: 1rem;
+            }
+
+            .team-name {
+                font-size: 1.5rem;
+            }
+
+            .team-points {
+                font-size: 2rem;
+            }
+
+            .team-logo {
+                width: 40px;
+                height: 40px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="palm-leaf"></div>
+    <div class="palm-leaf"></div>
+    <div class="palm-leaf"></div>
+    <div class="palm-leaf"></div>
+    
+    <div class="content">
+        <div class="standings-header">
+            <h1 class="standings-title">TEAM STANDINGS</h1>
+            <div class="standings-date">AS OF FEBRUARY 19, 2025</div>
+        </div>
+
+        <div class="team-card">
+            <div class="team-info">
+                <img src="red_siargao-removebg-preview.png" alt="Red Siargao Logo" class="team-logo">
+                <div class="team-name">RED SIARGAO</div>
+            </div>
+            <div class="team-points">0</div>
+        </div>
+
+        <div class="team-card">
+            <div class="team-info">
+                <img src="green_palawan-removebg-preview.png" alt="Green Palawan Logo" class="team-logo">
+                <div class="team-name">GREEN PALAWAN</div>
+            </div>
+            <div class="team-points">0</div>
+        </div>
+
+        <div class="team-card">
+            <div class="team-info">
+                <img src="yellow_camiguin-removebg-preview.png" alt="Yellow Camiguin Logo" class="team-logo">
+                <div class="team-name">YELLOW CAMIGUIN</div>
+            </div>
+            <div class="team-points">0</div>
+        </div>
+
+        <div class="team-card">
+            <div class="team-info">
+                <img src="blue_boracay-removebg-preview.png" alt="Blue Boracay Logo" class="team-logo">
+                <div class="team-name">BLUE BORACAY</div>
+            </div>
+            <div class="team-points">0</div>
+        </div>
+
+        <div class="footer">
+            TINUBDAN 2025
+        </div>
+    </div>
+
+    <script>
+        class LeaderboardManager {
+            constructor() {
+                // Initialize teams with initial data
+                this.teams = [
+                    { name: 'RED SIARGAO', points: 0, element: null },
+                    { name: 'GREEN PALAWAN', points: 0, element: null },
+                    { name: 'YELLOW CAMIGUIN', points: 0, element: null },
+                    { name: 'BLUE BORACAY', points: 0, element: null }
+                ];
+                
+                // Bind methods to ensure correct context
+                this.initializeTeamElements = this.initializeTeamElements.bind(this);
+                this.setupEditControls = this.setupEditControls.bind(this);
+                this.addPoints = this.addPoints.bind(this);
+                this.updateRankings = this.updateRankings.bind(this);
+                this.saveLeaderboard = this.saveLeaderboard.bind(this);
+                this.loadLeaderboard = this.loadLeaderboard.bind(this);
+                this.toggleEditControls = this.toggleEditControls.bind(this);
+                this.updateDate = this.updateDate.bind(this);
+                this.resetScores = this.resetScores.bind(this);
+
+                // Initialize on next tick to ensure DOM is ready
+                setTimeout(() => {
+                    this.initializeTeamElements();
+                    this.setupEditControls();
+                    this.loadLeaderboard();
+                    this.checkIframeContext();
+                    this.updateDate();
+                }, 0);
+            }
+
+            checkIframeContext() {
+                // Check if the page is loaded in an iframe
+                if (window.self !== window.top) {
+                    // Hide edit controls and toggle button when in iframe
+                    const editControls = document.querySelectorAll('.edit-controls');
+                    const toggleBtn = document.querySelector('.toggle-edit-btn');
+                    const resetBtn = document.querySelector('.reset-scores-btn');
+                    
+                    editControls.forEach(control => {
+                        control.style.display = 'none';
+                    });
+                    
+                    if (toggleBtn) {
+                        toggleBtn.style.display = 'none';
+                    }
+
+                    if (resetBtn) {
+                        resetBtn.style.display = 'none';
+                    }
+                }
+            }
+
+            updateDate() {
+                // Find the date element
+                const dateElement = document.querySelector('.standings-date');
+                if (dateElement) {
+                    // Get current date
+                    const currentDate = new Date();
+                    
+                    // Format options
+                    const options = { 
+                        weekday: 'long', 
+                        year: 'numeric', 
+                        month: 'long', 
+                        day: 'numeric' 
+                    };
+                    
+                    // Update text content
+                    dateElement.textContent = currentDate.toLocaleDateString('en-US', options);
+                }
+            }
+
+            initializeTeamElements() {
+                const teamCards = document.querySelectorAll('.team-card');
+                teamCards.forEach((card, index) => {
+                    // Store references to key elements
+                    this.teams[index].element = card;
+                    this.teams[index].pointsElement = card.querySelector('.team-points');
+                    this.teams[index].nameElement = card.querySelector('.team-name');
+                });
+            }
+
+            setupEditControls() {
+                this.teams.forEach((team, index) => {
+                    // Create edit controls
+                    const editControls = document.createElement('div');
+                    editControls.classList.add('edit-controls');
+                    editControls.innerHTML = `
+                        <input type="number" class="score-input" placeholder="Points">
+                        <button class="add-score-btn" data-team="${team.name}">Add Points</button>
+                    `;
+                    
+                    // Insert edit controls after team card
+                    team.element.parentNode.insertBefore(editControls, team.element.nextSibling);
+
+                    // Add event listener for add points
+                    const addBtn = editControls.querySelector('.add-score-btn');
+                    const input = editControls.querySelector('.score-input');
+                    
+                    addBtn.addEventListener('click', () => {
+                        const pointsToAdd = parseInt(input.value, 10);
+                        if (!isNaN(pointsToAdd) && pointsToAdd > 0) {
+                            this.addPoints(team.name, pointsToAdd);
+                            input.value = ''; // Clear input
+                        }
+                    });
+                });
+
+                // Create toggle button
+                this.createToggleButton();
+            }
+
+            createToggleButton() {
+                // Find the leaderboard container
+                const leaderboardContainer = document.querySelector('.content');
+                
+                // Create toggle button
+                const toggleBtn = document.createElement('button');
+                toggleBtn.textContent = 'Edit Scores';
+                toggleBtn.classList.add('toggle-edit-btn');
+                toggleBtn.addEventListener('click', this.toggleEditControls);
+
+                // Create reset scores button
+                const resetBtn = document.createElement('button');
+                resetBtn.textContent = 'Reset Scores';
+                resetBtn.classList.add('reset-scores-btn');
+                resetBtn.addEventListener('click', this.resetScores);
+
+                // Append buttons after the leaderboard
+                if (leaderboardContainer) {
+                    leaderboardContainer.appendChild(toggleBtn);
+                    leaderboardContainer.appendChild(resetBtn);
+                }
+            }
+
+            addPoints(teamName, points) {
+                const team = this.teams.find(t => t.name === teamName);
+                if (team) {
+                    team.points += points;
+                    team.pointsElement.textContent = team.points;
+                    this.updateRankings();
+                    this.saveLeaderboard();
+                }
+            }
+
+            updateRankings() {
+                // Sort teams by points
+                const sortedTeams = [...this.teams].sort((a, b) => b.points - a.points);
+
+                // Update team names with rankings
+                sortedTeams.forEach((team, index) => {
+                    const rankEmojis = ['🥇', '🥈', '🥉'];
+                    const rankPrefix = index < 3 ? rankEmojis[index] : `${index + 1}.`;
+                    
+                    // Find the original team and update its display
+                    const originalTeam = this.teams.find(t => t.name === team.name);
+                    if (originalTeam && originalTeam.nameElement) {
+                        originalTeam.nameElement.textContent = `${rankPrefix} ${team.name}`;
+                        
+                        // Reorder in DOM
+                        const container = originalTeam.element.parentNode;
+                        container.appendChild(originalTeam.element);
+                    }
+                });
+            }
+
+            saveLeaderboard() {
+                try {
+                    const leaderboardData = {
+                        lastUpdated: new Date().toISOString(),
+                        teams: this.teams.map(team => ({
+                            name: team.name,
+                            points: team.points,
+                            timestamp: new Date().toISOString()
+                        }))
+                    };
+
+                    // Convert to formatted JSON string for readability
+                    const formattedData = JSON.stringify(leaderboardData, null, 2);
+                    
+                    // Store formatted data
+                    localStorage.setItem('leaderboardData', formattedData);
+                    
+                    // Optional: Log successful save
+                    console.log('Leaderboard saved successfully');
+                } catch (error) {
+                    console.error('Error saving leaderboard:', error);
+                    // Optionally, show user-friendly error notification
+                    alert('Unable to save leaderboard. Please check your browser settings.');
+                }
+            }
+
+            loadLeaderboard() {
+                try {
+                    const savedData = localStorage.getItem('leaderboardData');
+                    if (savedData) {
+                        const parsedData = JSON.parse(savedData);
+                        
+                        // Validate data structure
+                        if (parsedData && parsedData.teams && Array.isArray(parsedData.teams)) {
+                            parsedData.teams.forEach(savedTeam => {
+                                const team = this.teams.find(t => t.name === savedTeam.name);
+                                if (team && team.pointsElement) {
+                                    team.points = savedTeam.points;
+                                    team.pointsElement.textContent = team.points;
+                                }
+                            });
+                            
+                            // Update rankings after loading
+                            this.updateRankings();
+                            
+                            // Log load information
+                            console.log(`Leaderboard loaded. Last updated: ${parsedData.lastUpdated}`);
+                        } else {
+                            console.warn('Invalid leaderboard data format');
+                        }
+                    }
+                } catch (error) {
+                    console.error('Error loading leaderboard:', error);
+                    // Optionally, reset or handle corrupted data
+                    alert('Error loading saved leaderboard. Data may be reset.');
+                }
+            }
+
+            toggleEditControls() {
+                // Select all edit control elements
+                const editControls = document.querySelectorAll('.edit-controls');
+                const toggleBtn = document.querySelector('.toggle-edit-btn');
+
+                // Toggle visibility
+                editControls.forEach(control => {
+                    control.classList.toggle('visible');
+                });
+
+                // Update button text based on current state
+                if (editControls[0].classList.contains('visible')) {
+                    toggleBtn.textContent = 'Hide Score Editing';
+                } else {
+                    toggleBtn.textContent = 'Edit Scores';
+                }
+            }
+
+            resetScores() {
+                // Confirm before resetting
+                const confirmReset = confirm('Are you sure you want to reset all team scores to zero?');
+                
+                if (confirmReset) {
+                    // Reset points for all teams
+                    this.teams.forEach(team => {
+                        team.points = 0;
+                        
+                        // Update points display
+                        if (team.pointsElement) {
+                            team.pointsElement.textContent = '0';
+                        }
+                    });
+
+                    // Update rankings
+                    this.updateRankings();
+
+                    // Save updated leaderboard
+                    this.saveLeaderboard();
+
+                    // Optional: Provide feedback
+                    alert('All team scores have been reset to zero.');
+                }
+            }
+        }
+
+        // Initialize leaderboard manager when DOM is fully loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            window.leaderboardManager = new LeaderboardManager();
+        });
+    </script>
+</body>
+</html>

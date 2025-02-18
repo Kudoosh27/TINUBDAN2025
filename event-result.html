@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Russo+One&family=Lilita+One&family=Black+Ops+One&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --turquoise: #40E0D0;
+            --sand: #FFE5B4;
+            --purple: #800080;
+            --gold: #FFD700;
+        }
+        
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            background: linear-gradient(180deg, var(--turquoise) 0%, var(--sand) 100%);
+            font-family: 'Arial', sans-serif;
+            overflow-x: hidden;
+        }
+
+        .palm-leaf {
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath fill='%23228B22' d='M50,0 C70,30 90,60 90,80 C90,100 10,100 10,80 C10,60 30,30 50,0'/%3E%3C/svg%3E") no-repeat;
+            opacity: 0.2;
+        }
+
+        .palm-leaf:nth-child(1) { top: -50px; left: -50px; transform: rotate(45deg); }
+        .palm-leaf:nth-child(2) { top: -50px; right: -50px; transform: rotate(-45deg); }
+        .palm-leaf:nth-child(3) { bottom: -50px; left: -50px; transform: rotate(135deg); }
+        .palm-leaf:nth-child(4) { bottom: -50px; right: -50px; transform: rotate(-135deg); }
+
+        .content {
+            position: relative;
+            z-index: 1;
+            padding: 2rem;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .result-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .result-title {
+            font-family: 'Black Ops One', cursive;
+            font-size: 3rem;
+            color: var(--purple);
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            margin: 1rem 0;
+            text-transform: uppercase;
+            text-align: center;
+        }
+
+        .date-nav {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .date-button {
+            font-family: 'Russo One', sans-serif;
+            background-color: var(--purple);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1.2rem;
+        }
+
+        .date-button.active {
+            background-color: var(--gold);
+            color: var(--purple);
+            transform: scale(1.05);
+        }
+
+        .date-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .result-card {
+            background: rgba(255, 255, 255, 0.9);
+            border: 2px solid var(--purple);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+
+        .result-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+
+        .time-slot {
+            font-family: 'Russo One', sans-serif;
+            color: var(--purple);
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid rgba(128, 0, 128, 0.2);
+        }
+
+        .event-details {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 0;
+        }
+
+        .event-name {
+            font-family: 'Lilita One', cursive;
+            font-size: 1.5rem;
+            color: var(--purple);
+        }
+
+        .event-location {
+            font-family: 'Russo One', sans-serif;
+            color: #666;
+            font-size: 1rem;
+            background-color: rgba(128, 0, 128, 0.1);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 3rem;
+            font-family: 'Russo One', sans-serif;
+            color: var(--purple);
+            font-size: 2rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .result-filters {
+            margin: 2rem 0;
+            display: none;
+        }
+
+        .result-filters.visible {
+            display: flex;
+            justify-content: center;
+        }
+
+        .filter-section {
+            margin-bottom: 1rem;
+        }
+
+        .filter-checkboxes {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .filter-button {
+            font-family: 'Russo One', sans-serif;
+            background-color: var(--purple);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+        }
+
+        .result-input-section {
+            background-color: rgba(255, 255, 255, 0.9);
+            border: 2px solid var(--purple);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: space-between;
+        }
+
+        .result-input-section .form-group {
+            flex: 1 1 calc(33% - 15px);
+            min-width: 200px;
+            margin-bottom: 10px;
+        }
+
+        .result-input-section label {
+            display: block;
+            margin-bottom: 5px;
+            color: var(--purple);
+            font-weight: bold;
+        }
+
+        .result-input-section input,
+        .result-input-section select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid var(--purple);
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        .submit-result-btn {
+            width: 100%;
+            padding: 10px;
+            background-color: var(--purple);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .submit-result-btn:hover {
+            background-color: #5a0572;
+        }
+
+        @media screen and (max-width: 768px) {
+            .result-title {
+                font-size: 2.5rem;
+            }
+
+            .date-nav {
+                flex-wrap: wrap;
+            }
+
+            .date-button {
+                font-size: 1rem;
+                padding: 0.5rem 1rem;
+            }
+
+            .event-details {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
+            }
+
+            .event-name {
+                font-size: 1.2rem;
+            }
+
+            .result-input-section .form-group {
+                flex: 1 1 100%;
+            }
+        }
+
+        @media screen and (max-width: 768px) {
+            .filter-checkboxes {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="palm-leaf"></div>
+    <div class="palm-leaf"></div>
+    <div class="palm-leaf"></div>
+    <div class="palm-leaf"></div>
+    
+    <div class="content">
+        <div class="result-header">
+            <h1 class="result-title">GAME RESULTS</h1>
+        </div>
+
+        <div class="date-nav">
+            <button class="date-button">Yesterday</button>
+            <button class="date-button">Today</button>
+            <button class="date-button">FEB 22</button>
+        </div>
+
+        <button id="toggleFiltersBtn" class="filter-button">Filter Game Results</button>
+
+        <div id="resultCardsContainer"></div>
+
+        <div id="resultFilters" class="result-filters">
+            <div class="filter-section events-filter">
+                <h3>Select Events</h3>
+                <div class="filter-checkboxes">
+                    <label><input type="checkbox" name="event" value="basketball"> Basketball</label>
+                    <label><input type="checkbox" name="event" value="volleyball"> Volleyball</label>
+                    <label><input type="checkbox" name="event" value="soccer"> Soccer</label>
+                </div>
+            </div>
+
+            <div class="filter-section teams-filter">
+                <h3>Select Teams</h3>
+                <div class="filter-checkboxes">
+                    <label><input type="checkbox" name="team" value="red-siargao"> Red Siargao</label>
+                    <label><input type="checkbox" name="team" value="green-palawan"> Green Palawan</label>
+                    <label><input type="checkbox" name="team" value="yellow-camiguin"> Yellow Camiguin</label>
+                    <label><input type="checkbox" name="team" value="blue-boracay"> Blue Boracay</label>
+                </div>
+            </div>
+
+            <div class="filter-section area-filter">
+                <h3>Select Areas</h3>
+                <div class="filter-checkboxes">
+                    <label><input type="checkbox" name="area" value="main-court"> Main Court</label>
+                    <label><input type="checkbox" name="area" value="secondary-court"> Secondary Court</label>
+                    <label><input type="checkbox" name="area" value="outdoor-field"> Outdoor Field</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="date-buttons">
+            <button class="date-button active">Today</button>
+            <button class="date-button">Tomorrow</button>
+            <button class="date-button">This Week</button>
+        </div>
+
+        <div class="footer">
+            TINUBDAN 2025
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const submitResultBtn = document.getElementById('submitResultBtn');
+            const resultCardsContainer = document.getElementById('resultCardsContainer');
+            const eventTypeSelect = document.getElementById('eventType');
+            const team1Input = document.getElementById('team1');
+            const team2Input = document.getElementById('team2');
+
+            // Function to fetch game schedule data
+            async function fetchGameScheduleData() {
+                try {
+                    const response = await fetch('game-schedule.html');
+                    const text = await response.text();
+                    
+                    // Create a temporary div to parse the HTML
+                    const tempDiv = document.createElement('div');
+                    tempDiv.innerHTML = text;
+                    
+                    // Extract schedule cards
+                    const scheduleCards = tempDiv.querySelectorAll('.schedule-card');
+                    
+                    // Populate event type dropdown and store schedule data
+                    const scheduleData = [];
+                    
+                    scheduleCards.forEach(card => {
+                        const eventNameEl = card.querySelector('.event-name');
+                        const timeSlotEl = card.querySelector('.time-slot');
+                        const locationEl = card.querySelector('.event-location');
+                        
+                        if (eventNameEl && timeSlotEl && locationEl) {
+                            const eventName = eventNameEl.textContent.trim();
+                            const timeSlot = timeSlotEl.textContent.trim();
+                            const location = locationEl.textContent.trim();
+                            
+                            // Parse event details
+                            const [eventType, teams] = eventName.split(': ');
+                            const [team1, team2] = teams ? teams.split(' vs ').map(t => t.trim()) : [];
+                            
+                            scheduleData.push({
+                                eventType: eventType.toLowerCase().replace(/ /g, '-'),
+                                team1,
+                                team2,
+                                timeSlot,
+                                location
+                            });
+                        }
+                    });
+                    
+                    return scheduleData;
+                } catch (error) {
+                    console.error('Error fetching game schedule:', error);
+                    return [];
+                }
+            }
+
+            // Populate event types and teams dynamically
+            async function populateEventAndTeams() {
+                const scheduleData = await fetchGameScheduleData();
+                
+                // Clear existing options
+                eventTypeSelect.innerHTML = '<option value="">Select Event Type</option>';
+                
+                // Group events by type
+                const eventTypes = {};
+                scheduleData.forEach(event => {
+                    if (!eventTypes[event.eventType]) {
+                        eventTypes[event.eventType] = new Set();
+                    }
+                    if (event.team1) eventTypes[event.eventType].add(event.team1);
+                    if (event.team2) eventTypes[event.eventType].add(event.team2);
+                });
+                
+                // Populate event type dropdown
+                Object.entries(eventTypes).forEach(([eventType, teams]) => {
+                    const option = document.createElement('option');
+                    option.value = eventType;
+                    option.textContent = capitalizeWords(eventType);
+                    eventTypeSelect.appendChild(option);
+                });
+                
+                // Add event listener to dynamically populate teams
+                eventTypeSelect.addEventListener('change', function() {
+                    const selectedEventType = this.value;
+                    const relevantEvents = scheduleData.filter(event => event.eventType === selectedEventType);
+                    
+                    // Collect unique teams for the selected event type
+                    const teams = new Set();
+                    relevantEvents.forEach(event => {
+                        if (event.team1) teams.add(event.team1);
+                        if (event.team2) teams.add(event.team2);
+                    });
+                    
+                    // Populate team inputs with autocomplete
+                    const teamList = Array.from(teams);
+                    team1Input.setAttribute('list', 'team1-list');
+                    team2Input.setAttribute('list', 'team2-list');
+                    
+                    // Create or update datalist
+                    let team1Datalist = document.getElementById('team1-list');
+                    let team2Datalist = document.getElementById('team2-list');
+                    
+                    if (!team1Datalist) {
+                        team1Datalist = document.createElement('datalist');
+                        team1Datalist.id = 'team1-list';
+                        document.body.appendChild(team1Datalist);
+                    }
+                    
+                    if (!team2Datalist) {
+                        team2Datalist = document.createElement('datalist');
+                        team2Datalist.id = 'team2-list';
+                        document.body.appendChild(team2Datalist);
+                    }
+                    
+                    // Clear existing options
+                    team1Datalist.innerHTML = '';
+                    team2Datalist.innerHTML = '';
+                    
+                    // Add team options
+                    teamList.forEach(team => {
+                        const option1 = document.createElement('option');
+                        option1.value = team;
+                        team1Datalist.appendChild(option1);
+                        
+                        const option2 = document.createElement('option');
+                        option2.value = team;
+                        team2Datalist.appendChild(option2);
+                    });
+                });
+            }
+
+            // Call the population function
+            populateEventAndTeams();
+
+            // Rest of the existing submit result code remains the same
+            submitResultBtn.addEventListener('click', function() {
+                // Get form values
+                const eventType = eventTypeSelect.value;
+                const team1 = team1Input.value;
+                const team1Score = document.getElementById('team1Score').value;
+                const team2 = team2Input.value;
+                const team2Score = document.getElementById('team2Score').value;
+
+                // Validate inputs
+                if (!eventType || !team1 || !team2 || team1Score === '' || team2Score === '') {
+                    alert('Please fill in all fields');
+                    return;
+                }
+
+                // Determine winner
+                let winner, winnerScore, loserScore;
+                if (parseInt(team1Score) > parseInt(team2Score)) {
+                    winner = team1;
+                    winnerScore = team1Score;
+                    loserScore = team2Score;
+                } else if (parseInt(team2Score) > parseInt(team1Score)) {
+                    winner = team2;
+                    winnerScore = team2Score;
+                    loserScore = team1Score;
+                } else {
+                    winner = 'Tie';
+                    winnerScore = team1Score;
+                    loserScore = team2Score;
+                }
+
+                // Create result card
+                const resultCard = document.createElement('div');
+                resultCard.classList.add('result-card');
+                resultCard.innerHTML = `
+                    <div class="event-details">
+                        <div class="event-name">${capitalizeWords(eventType)}: ${capitalizeWords(team1)} vs ${capitalizeWords(team2)}</div>
+                        <div class="event-winner">
+                            ${winner === 'Tie' 
+                                ? 'Match Ended in a Tie' 
+                                : `Winner: ${capitalizeWords(winner)}`}
+                        </div>
+                        <div class="event-score">
+                            Score: ${capitalizeWords(team1)} ${team1Score} - ${capitalizeWords(team2)} ${team2Score}
+                        </div>
+                    </div>
+                `;
+
+                // Insert new card at the top of the container
+                resultCardsContainer.insertBefore(resultCard, resultCardsContainer.firstChild);
+
+                // Reset form
+                document.getElementById('eventType').selectedIndex = 0;
+                document.getElementById('team1').value = '';
+                document.getElementById('team1Score').value = '';
+                document.getElementById('team2').value = '';
+                document.getElementById('team2Score').value = '';
+            });
+
+            function capitalizeWords(str) {
+                return str.replace(/-/g, ' ')
+                          .split(' ')
+                          .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+                          .join(' ');
+            }
+        });
+    </script>
+</body>
+</html>
