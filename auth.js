@@ -6,53 +6,73 @@ function authenticate(username, password) {
     return username === ADMIN_USERNAME && password === ADMIN_PASSWORD;
 }
 
+// Logout function
+function logout() {
+    localStorage.removeItem('isAuthenticated');
+    localStorage.removeItem('authTimestamp');
+    window.location.href = 'login.html';
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     const loginForm = document.getElementById('login-form');
     const errorMessage = document.getElementById('error-message');
     const usernameInput = document.getElementById('username');
     const passwordInput = document.getElementById('password');
 
+    // Check if logout button exists (on tinubdan-official page)
+    const logoutBtn = document.getElementById('logoutBtn');
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', logout);
+    }
+
     // Prevent form submission and page reload
-    loginForm.addEventListener('submit', function(e) {
-        // Prevent default form submission
-        e.preventDefault();
-        e.stopPropagation();
+    if (loginForm) {
+        loginForm.addEventListener('submit', function(e) {
+            // Prevent default form submission
+            e.preventDefault();
+            e.stopPropagation();
 
-        // Clear previous error messages
-        errorMessage.textContent = '';
+            // Clear previous error messages
+            errorMessage.textContent = '';
 
-        // Trim inputs to remove whitespace
-        const username = usernameInput.value.trim();
-        const password = passwordInput.value.trim();
+            // Trim inputs to remove whitespace
+            const username = usernameInput.value.trim();
+            const password = passwordInput.value.trim();
 
-        // Validate inputs
-        if (!username || !password) {
-            errorMessage.textContent = 'Please enter both username and password';
-            return;
-        }
+            // Validate inputs
+            if (!username || !password) {
+                errorMessage.textContent = 'Please enter both username and password';
+                return;
+            }
 
-        // Authenticate
-        if (authenticate(username, password)) {
-            // Store authentication state securely
-            localStorage.setItem('isAuthenticated', 'true');
-            localStorage.setItem('authTimestamp', Date.now().toString());
+            // Authenticate
+            if (authenticate(username, password)) {
+                // Store authentication state securely
+                localStorage.setItem('isAuthenticated', 'true');
+                localStorage.setItem('authTimestamp', Date.now().toString());
 
-            // Redirect to management view
-            window.location.href = 'tinubdan-official.html';
-        } else {
-            // Show error and reset password field
-            errorMessage.textContent = 'Invalid credentials';
-            passwordInput.value = '';
-            passwordInput.focus();
-        }
-    });
+                // Optional: Add a welcome toast or notification
+                alert('Login Successful! Welcome to Tinubdan 2025');
+
+                // Redirect to official page
+                window.location.href = 'tinubdan-official.html';
+            } else {
+                // Show error and reset password field
+                errorMessage.textContent = 'Invalid credentials';
+                passwordInput.value = '';
+                passwordInput.focus();
+            }
+        });
+    }
 
     // Optional: Add real-time validation
-    [usernameInput, passwordInput].forEach(input => {
-        input.addEventListener('input', () => {
-            errorMessage.textContent = '';
+    if (usernameInput && passwordInput) {
+        [usernameInput, passwordInput].forEach(input => {
+            input.addEventListener('input', () => {
+                errorMessage.textContent = '';
+            });
         });
-    });
+    }
 });
 
 // Enhanced access control function
