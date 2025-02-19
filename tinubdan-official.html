@@ -671,6 +671,103 @@
         .logout-btn:hover {
             transform: scale(1.05);
         }
+
+        .user-navigation {
+            margin-top: 2rem;
+            text-align: center;
+        }
+
+        .navigation-title {
+            font-family: 'Black Ops One', cursive;
+            color: var(--gold);
+            margin-bottom: 1.5rem;
+        }
+
+        .navigation-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        .nav-button {
+            text-decoration: none;
+            background-color: var(--purple);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 10px;
+            font-family: 'Russo One', sans-serif;
+            transition: transform 0.3s ease, background-color 0.3s ease;
+        }
+
+        .nav-button:hover {
+            background-color: var(--gold);
+            color: var(--purple);
+            transform: scale(1.05);
+        }
+
+        .global-navigation {
+            display: none;
+        }
+
+        .global-navigation .user-navigation {
+            display: none;
+        }
+
+        .global-navigation .logout-btn {
+            display: none;
+        }
+
+        .public-navigation-section {
+            display: none;
+        }
+
+        .logout-section {
+            margin-top: 1rem;
+            text-align: center;
+        }
+
+        .home-btn {
+            background-color: var(--purple);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 10px;
+            font-family: 'Russo One', sans-serif;
+            cursor: pointer;
+            transition: transform 0.3s ease, background-color 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .home-btn:hover {
+            background-color: var(--gold);
+            color: var(--purple);
+            transform: scale(1.05);
+        }
+
+        /* Quick Access Buttons for Management View */
+        .quick-access-buttons {
+            display: flex;
+            justify-content: center;
+            margin: 1rem 0;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .quick-access-btn {
+            padding: 0.75rem 1.5rem;
+            background-color: var(--purple);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .quick-access-btn:hover {
+            background-color: #600060;
+        }
     </style>
 </head>
 <body>
@@ -768,77 +865,101 @@
                     </iframe>
                 </div>
             </div>
+
+            <div class="logout-section">
+                <a href="index.html" class="home-btn">Home</a>
+                <button class="logout-btn" id="logoutBtn" onclick="logout()">Logout</button>
+            </div>
         </div>
 
         <div class="management-view">
-            <div class="management-section">
-                <h2>Game Schedule Management</h2>
-                <table class="management-table">
-                    <thead>
-                        <tr>
-                            <th>Event</th>
-                            <th>Date</th>
-                            <th>Time</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="scheduleManagementTable">
-                        <!-- Dynamically populated schedules -->
-                    </tbody>
-                </table>
+            <div class="logout-section">
+                <button class="logout-btn" id="logoutBtn" onclick="logout()">Logout</button>
+            </div>
+
+            <div class="quick-access-buttons">
                 <div class="management-actions">
-                    <button class="management-btn" id="addScheduleBtn">Add Schedule</button>
-                    <button class="management-btn" id="editScheduleBtn">Edit Schedule</button>
+                    <button class="quick-access-btn" id="addScheduleBtn">Add Schedule</button>
+                    <button class="quick-access-btn" id="editScheduleBtn">Edit Schedule</button>
+                    <button class="quick-access-btn" id="addResultBtn">Add Result</button>
+                    <button class="quick-access-btn" id="editResultBtn">Edit Result</button>
+                    <button class="quick-access-btn" id="updateLeaderboardBtn">Update Leaderboard</button>
                 </div>
             </div>
 
-            <div class="management-section">
-                <h2>Event Results Management</h2>
-                <table class="management-table">
-                    <thead>
-                        <tr>
-                            <th>Event</th>
-                            <th>Winner</th>
-                            <th>Score</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="resultManagementTable">
-                        <!-- Dynamically populated results -->
-                    </tbody>
-                </table>
-                <div class="management-actions">
-                    <button class="management-btn" id="addResultBtn">Add Result</button>
-                    <button class="management-btn" id="editResultBtn">Edit Result</button>
-                </div>
+            <div class="management-navigation">
+                <button class="management-nav-btn active" data-section="leaderboards">Leaderboards</button>
+                <button class="management-nav-btn" data-section="schedules">Game Schedules</button>
+                <button class="management-nav-btn" data-section="results">Game Results</button>
+                <button class="management-nav-btn" data-section="additional-links">Additional Links</button>
             </div>
 
-            <div class="management-section">
-                <h2>Leaderboards Management</h2>
-                <table class="management-table">
-                    <thead>
-                        <tr>
-                            <th>Team</th>
-                            <th>Points</th>
-                            <th>Rank</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="leaderboardManagementTable">
-                        <!-- Dynamically populated leaderboards -->
-                    </tbody>
-                </table>
+            <div class="management-section" id="leaderboards-section">
+                <h2>Leaderboard Management</h2>
                 <div class="management-actions">
-                    <button class="management-btn" id="updateLeaderboardBtn">Update Leaderboard</button>
+                    <button id="updateLeaderboardBtn" class="management-btn">Update Leaderboard</button>
+                    <button id="proceedLeaderboardBtn" class="management-btn proceed-btn" onclick="proceedToLink('leaderboards.html')">Proceed to Leaderboard</button>
+                </div>
+                <iframe 
+                    src="leaderboards.html" 
+                    width="100%" 
+                    height="600" 
+                    frameborder="0" 
+                    scrolling="yes" 
+                    title="Leaderboard Management">
+                </iframe>
+            </div>
+
+            <div class="management-section" id="schedules-section" style="display: none;">
+                <h2>Game Schedules Management</h2>
+                <div class="management-actions">
+                    <button id="addScheduleBtn" class="management-btn">Add New Schedule</button>
+                    <button id="editScheduleBtn" class="management-btn">Edit Schedule</button>
+                    <button id="proceedScheduleBtn" class="management-btn proceed-btn" onclick="proceedToLink('game-schedule.html')">Proceed to Game Schedule</button>
+                </div>
+                <iframe 
+                    src="game-schedule.html" 
+                    width="100%" 
+                    height="600" 
+                    frameborder="0" 
+                    scrolling="auto" 
+                    title="Game Schedule Management">
+                </iframe>
+            </div>
+
+            <div class="management-section" id="results-section" style="display: none;">
+                <h2>Game Results Management</h2>
+                <div class="management-actions">
+                    <button id="addResultBtn" class="management-btn">Add New Result</button>
+                    <button id="editResultBtn" class="management-btn">Edit Result</button>
+                    <button id="proceedResultBtn" class="management-btn proceed-btn" onclick="proceedToLink('event-result.html')">Proceed to Event Results</button>
+                </div>
+                <iframe 
+                    src="event-result.html" 
+                    width="100%" 
+                    height="600" 
+                    frameborder="0" 
+                    scrolling="auto" 
+                    title="Event Results Management">
+                </iframe>
+            </div>
+
+            <div class="management-section" id="additional-links-section" style="display: none;">
+                <h2>Additional Links</h2>
+                <div class="management-actions">
+                    <button id="proceedHomeBtn" class="management-btn proceed-btn" onclick="proceedToLink('index.html')">Go to Home</button>
+                    <button id="proceedLoginBtn" class="management-btn proceed-btn" onclick="proceedToLink('login.html')">Go to Login</button>
+                    <button id="proceedTinubdanOfficialBtn" class="management-btn proceed-btn" onclick="proceedToLink('tinubdan-official.html')">Reload Tinubdan Official</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <button class="view-toggle" id="viewToggleBtn">Switch to Management View</button>
-    
-    <!-- Add logout button -->
-    <button class="logout-btn" id="logoutBtn">Logout</button>
+    <div id="management-toggle-section" style="display: none;">
+        <button class="view-toggle" id="viewToggleBtn" style="display: none;">Switch to Management View</button>
+    </div>
+
+    <script src="auth.js"></script>
 
     <script>
         class TinubdanEditor {
@@ -904,9 +1025,8 @@
         document.addEventListener('DOMContentLoaded', () => {
             const editor = new TinubdanEditor();
             editor.loadSavedChanges();
-        });
 
-        document.addEventListener('DOMContentLoaded', () => {
+            // Restore Intersection Observers
             const observerOptions = {
                 root: null,
                 rootMargin: '0px',
@@ -939,6 +1059,7 @@
                 slideInObserver.observe(section);
             });
 
+            // Restore palm leaf scroll animation
             window.addEventListener('scroll', () => {
                 const scrollPosition = window.pageYOffset;
                 document.querySelectorAll('.palm-leaf').forEach((leaf, index) => {
@@ -946,9 +1067,8 @@
                     leaf.style.transform = `translateY(${scrollPosition * speed}px) rotate(${45 * (index + 1)}deg)`;
                 });
             });
-        });
 
-        document.addEventListener('DOMContentLoaded', () => {
+            // Restore view toggle functionality
             const viewToggleBtn = document.getElementById('viewToggleBtn');
             const managementView = document.querySelector('.management-view');
             let isManagementView = false;
@@ -965,7 +1085,7 @@
                 }
             });
 
-            // Placeholder for management functionality
+            // Restore management button placeholders
             const managementButtons = [
                 'addScheduleBtn', 'editScheduleBtn', 
                 'addResultBtn', 'editResultBtn', 
@@ -981,10 +1101,90 @@
                 }
             });
 
+            // Logout button
             const logoutBtn = document.getElementById('logoutBtn');
             logoutBtn.addEventListener('click', () => {
-                alert('Logout functionality to be implemented');
+                // Ensure logout only works in management view
+                const managementView = document.querySelector('.management-view');
+                if (managementView && managementView.classList.contains('active')) {
+                    logout();
+                } else {
+                    console.log('Logout restricted to management view');
+                }
             });
+
+            // Management Navigation Toggle
+            const managementNavButtons = document.querySelectorAll('.management-nav-btn');
+            const managementSections = {
+                'leaderboards': document.getElementById('leaderboards-section'),
+                'schedules': document.getElementById('schedules-section'),
+                'results': document.getElementById('results-section'),
+                'additional-links': document.getElementById('additional-links-section')
+            };
+
+            managementNavButtons.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const targetSection = this.getAttribute('data-section');
+                    
+                    // Hide all management sections
+                    document.querySelectorAll('.management-section').forEach(section => {
+                        section.style.display = 'none';
+                    });
+
+                    // Remove active class from all buttons
+                    managementNavButtons.forEach(navBtn => {
+                        navBtn.classList.remove('active');
+                    });
+
+                    // Show target section and add active class to clicked button
+                    const targetSectionElement = document.getElementById(`${targetSection}-section`);
+                    if (targetSectionElement) {
+                        targetSectionElement.style.display = 'block';
+                    }
+                    this.classList.add('active');
+
+                    // Reload iframes when switching sections
+                    reloadIframes();
+                });
+            });
+
+            // Ensure iframes are reloaded when switching sections
+            function reloadIframes() {
+                const iframes = document.querySelectorAll('.management-section iframe');
+                iframes.forEach(iframe => {
+                    const currentSrc = iframe.src;
+                    iframe.src = '';
+                    setTimeout(() => {
+                        iframe.src = currentSrc;
+                    }, 10);
+                });
+            }
+
+            // Add reload functionality to management navigation
+            managementNavButtons.forEach(btn => {
+                btn.addEventListener('click', reloadIframes);
+            });
+
+            // Quick Access Buttons Functionality
+            const quickAccessButtons = [
+                'addScheduleBtn', 'editScheduleBtn', 
+                'addResultBtn', 'editResultBtn', 
+                'updateLeaderboardBtn'
+            ];
+
+            quickAccessButtons.forEach(btnId => {
+                const btn = document.getElementById(btnId);
+                if (btn) {
+                    btn.addEventListener('click', () => {
+                        alert(`${btn.textContent} functionality to be implemented`);
+                    });
+                }
+            });
+
+            // Function to proceed to specific link
+            function proceedToLink(link) {
+                window.open(link, '_blank');
+            }
         });
     </script>
 </body>
