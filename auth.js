@@ -9,30 +9,73 @@ function authenticate(username, password) {
 document.addEventListener('DOMContentLoaded', () => {
     const loginForm = document.getElementById('login-form');
     const errorMessage = document.getElementById('error-message');
+    const usernameInput = document.getElementById('username');
+    const passwordInput = document.getElementById('password');
 
-    loginForm.addEventListener('submit', (e) => {
+    // Prevent form submission and page reload
+    loginForm.addEventListener('submit', function(e) {
+        // Prevent default form submission
         e.preventDefault();
-        const username = document.getElementById('username').value;
-        const password = document.getElementById('password').value;
+        e.stopPropagation();
 
-        if (authenticate(username, password)) {
-            // Store authentication state
-            localStorage.setItem('isAuthenticated', 'true');
-            // Redirect to game-schedule or dashboard
-            window.location.href = 'game-schedule.html';
-        } else {
-            errorMessage.textContent = 'Invalid credentials';
+        // Clear previous error messages
+        errorMessage.textContent = '';
+
+        // Trim inputs to remove whitespace
+        const username = usernameInput.value.trim();
+        const password = passwordInput.value.trim();
+
+        // Validate inputs
+        if (!username || !password) {
+            errorMessage.textContent = 'Please enter both username and password';
+            return;
         }
+
+        // Authenticate
+        if (authenticate(username, password)) {
+            // Store authentication state securely
+            localStorage.setItem('isAuthenticated', 'true');
+            localStorage.setItem('authTimestamp', Date.now().toString());
+
+            // Redirect to management view
+            window.location.href = 'tinubdan-official.html';
+        } else {
+            // Show error and reset password field
+            errorMessage.textContent = 'Invalid credentials';
+            passwordInput.value = '';
+            passwordInput.focus();
+        }
+    });
+
+    // Optional: Add real-time validation
+    [usernameInput, passwordInput].forEach(input => {
+        input.addEventListener('input', () => {
+            errorMessage.textContent = '';
+        });
     });
 });
 
-// Access control function for private pages
+// Enhanced access control function
 function checkAccess() {
     const isAuthenticated = localStorage.getItem('isAuthenticated') === 'true';
-    if (!isAuthenticated) {
+    const authTimestamp = localStorage.getItem('authTimestamp');
+    
+    // Optional: Add timeout (e.g., 1 hour)
+    const TIMEOUT = 60 * 60 * 1000; // 1 hour in milliseconds
+    const isSessionValid = authTimestamp && 
+        (Date.now() - parseInt(authTimestamp, 10) < TIMEOUT);
+
+    // Only redirect if not on login page
+    if ((!isAuthenticated || !isSessionValid) && 
+        !window.location.pathname.includes('login.html')) {
+        // Clear any stale authentication data
+        localStorage.removeItem('isAuthenticated');
+        localStorage.removeItem('authTimestamp');
+        
+        // Redirect to login
         window.location.href = 'login.html';
     }
 }
 
-// Add this to private pages like game-schedule.html, event-result.html
+// Add this to private pages
 document.addEventListener('DOMContentLoaded', checkAccess);
