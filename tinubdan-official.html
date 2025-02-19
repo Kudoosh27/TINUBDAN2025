@@ -550,6 +550,127 @@
         .location-map:hover {
             transform: scale(1.02);
         }
+
+        /* Two-sided view styles */
+        .site-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .public-view, 
+        .management-view {
+            flex: 1;
+            padding: 2rem;
+            overflow-y: auto;
+            transition: transform 0.3s ease;
+        }
+
+        .public-view {
+            background: linear-gradient(180deg, var(--turquoise) 0%, var(--sand) 100%);
+        }
+
+        .management-view {
+            background: linear-gradient(180deg, var(--purple) 0%, rgba(128, 0, 128, 0.8) 100%);
+            color: white;
+            transform: translateX(100%);
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 50%;
+            z-index: 10;
+        }
+
+        .management-view.active {
+            transform: translateX(0);
+        }
+
+        .view-toggle {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: var(--gold);
+            color: var(--purple);
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 10px;
+            font-family: 'Russo One', sans-serif;
+            cursor: pointer;
+            z-index: 20;
+            transition: transform 0.3s ease;
+        }
+
+        .view-toggle:hover {
+            transform: translateX(-50%) scale(1.05);
+        }
+
+        .management-section {
+            margin-bottom: 2rem;
+        }
+
+        .management-section h2 {
+            font-family: 'Black Ops One', cursive;
+            color: var(--gold);
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .management-table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .management-table th, 
+        .management-table td {
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 0.75rem;
+            text-align: left;
+        }
+
+        .management-table th {
+            background-color: rgba(255, 255, 255, 0.2);
+            color: var(--gold);
+        }
+
+        .management-actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 1rem;
+        }
+
+        .management-btn {
+            background-color: var(--gold);
+            color: var(--purple);
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .management-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .logout-btn {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background-color: var(--purple);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 10px;
+            font-family: 'Russo One', sans-serif;
+            cursor: pointer;
+            z-index: 20;
+            transition: transform 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            transform: scale(1.05);
+        }
     </style>
 </head>
 <body>
@@ -560,91 +681,164 @@
         <div class="palm-leaf"></div>
     </div>
 
-    <div class="header">
-        <div class="institution-logos">
-            <img src="student_council-removebg-preview.png" alt="South Philippine Adventist College Student Council Logo" class="institution-logo">
+    <div class="site-container">
+        <div class="public-view">
+            <div class="header">
+                <div class="institution-logos">
+                    <img src="student_council-removebg-preview.png" alt="South Philippine Adventist College Student Council Logo" class="institution-logo">
+                </div>
+                <div class="college-name">SOUTH PHILIPPINE ADVENTIST COLLEGE</div>
+                <h1 class="title">TINUBDAN 2025</h1>
+                <div class="tagline">Bulawanong Kagahapon,<br>Atong Pasidunggan Karon</div>
+                <div class="dates">FEBRUARY 19-22, 2025</div>
+            </div>
+
+            <div class="container">
+                <h2 class="teams-section-title slide-section">TEAMS</h2>
+                <div class="team-emblems">
+                    <div class="team-emblem-container fade-section">
+                        <div class="team-emblem">
+                            <img src="red_siargao-removebg-preview.png" alt="Red Siargao Team" />
+                        </div>
+                        <div class="team-name">RED SIARGAO</div>
+                    </div>
+                    <div class="team-emblem-container fade-section">
+                        <div class="team-emblem">
+                            <img src="green_palawan-removebg-preview.png" alt="Green Palawan Team" />
+                        </div>
+                        <div class="team-name">GREEN PALAWAN</div>
+                    </div>
+                    <div class="team-emblem-container fade-section">
+                        <div class="team-emblem">
+                            <img src="yellow_camiguin-removebg-preview.png" alt="Yellow Camiguin Team" />
+                        </div>
+                        <div class="team-name">YELLOW CAMIGUIN</div>
+                    </div>
+                    <div class="team-emblem-container fade-section">
+                        <div class="team-emblem">
+                            <img src="blue_boracay-removebg-preview.png" alt="Blue Boracay Team" />
+                        </div>
+                        <div class="team-name">BLUE BORACAY</div>
+                    </div>
+                </div>
+
+                <div id="leaderboard" class="section fade-section">
+                    <h2>🏆 Leaderboard</h2>
+                    <iframe 
+                        src="leaderboards.html" 
+                        width="100%" 
+                        height="400" 
+                        frameborder="0" 
+                        scrolling="yes" 
+                        title="Leaderboard Table">
+                    </iframe>
+                </div>
+
+                <div id="event-locations" class="section fade-section">
+                    <h2>🏟️ Event Locations</h2>
+                    <div class="location-map">
+                        <img src="476722956_942546187992853_7182961808092369392_n.jpg" 
+                             alt="Tinubdan 2025 Event Locations Map" 
+                             class="full-width-map" 
+                             title="Event Locations Across Venues">
+                    </div>
+                </div>
+
+                <div id="game-schedule" class="section fade-section">
+                    <h2>📅 Game Schedule</h2>
+                    <iframe 
+                        src="game-schedule.html" 
+                        width="100%" 
+                        height="500" 
+                        frameborder="0" 
+                        scrolling="auto" 
+                        title="Game Schedule">
+                    </iframe>
+                </div>
+
+                <div id="event-results" class="section fade-section">
+                    <h2>🏅 Event Results</h2>
+                    <iframe 
+                        src="event-result.html" 
+                        width="100%" 
+                        height="500" 
+                        frameborder="0" 
+                        scrolling="auto" 
+                        title="Event Results">
+                    </iframe>
+                </div>
+            </div>
         </div>
-        <div class="college-name">SOUTH PHILIPPINE ADVENTIST COLLEGE</div>
-        <h1 class="title">TINUBDAN 2025</h1>
-        <div class="tagline">Bulawanong Kagahapon,<br>Atong Pasidunggan Karon</div>
-        <div class="dates">FEBRUARY 19-22, 2025</div>
+
+        <div class="management-view">
+            <div class="management-section">
+                <h2>Game Schedule Management</h2>
+                <table class="management-table">
+                    <thead>
+                        <tr>
+                            <th>Event</th>
+                            <th>Date</th>
+                            <th>Time</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="scheduleManagementTable">
+                        <!-- Dynamically populated schedules -->
+                    </tbody>
+                </table>
+                <div class="management-actions">
+                    <button class="management-btn" id="addScheduleBtn">Add Schedule</button>
+                    <button class="management-btn" id="editScheduleBtn">Edit Schedule</button>
+                </div>
+            </div>
+
+            <div class="management-section">
+                <h2>Event Results Management</h2>
+                <table class="management-table">
+                    <thead>
+                        <tr>
+                            <th>Event</th>
+                            <th>Winner</th>
+                            <th>Score</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="resultManagementTable">
+                        <!-- Dynamically populated results -->
+                    </tbody>
+                </table>
+                <div class="management-actions">
+                    <button class="management-btn" id="addResultBtn">Add Result</button>
+                    <button class="management-btn" id="editResultBtn">Edit Result</button>
+                </div>
+            </div>
+
+            <div class="management-section">
+                <h2>Leaderboards Management</h2>
+                <table class="management-table">
+                    <thead>
+                        <tr>
+                            <th>Team</th>
+                            <th>Points</th>
+                            <th>Rank</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="leaderboardManagementTable">
+                        <!-- Dynamically populated leaderboards -->
+                    </tbody>
+                </table>
+                <div class="management-actions">
+                    <button class="management-btn" id="updateLeaderboardBtn">Update Leaderboard</button>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <div class="container">
-        <h2 class="teams-section-title slide-section">TEAMS</h2>
-        <div class="team-emblems">
-            <div class="team-emblem-container fade-section">
-                <div class="team-emblem">
-                    <img src="red_siargao-removebg-preview.png" alt="Red Siargao Team" />
-                </div>
-                <div class="team-name">RED SIARGAO</div>
-            </div>
-            <div class="team-emblem-container fade-section">
-                <div class="team-emblem">
-                    <img src="green_palawan-removebg-preview.png" alt="Green Palawan Team" />
-                </div>
-                <div class="team-name">GREEN PALAWAN</div>
-            </div>
-            <div class="team-emblem-container fade-section">
-                <div class="team-emblem">
-                    <img src="yellow_camiguin-removebg-preview.png" alt="Yellow Camiguin Team" />
-                </div>
-                <div class="team-name">YELLOW CAMIGUIN</div>
-            </div>
-            <div class="team-emblem-container fade-section">
-                <div class="team-emblem">
-                    <img src="blue_boracay-removebg-preview.png" alt="Blue Boracay Team" />
-                </div>
-                <div class="team-name">BLUE BORACAY</div>
-            </div>
-        </div>
-
-        <div id="leaderboard" class="section fade-section">
-            <h2>🏆 Leaderboard</h2>
-            <iframe 
-                src="leaderboards.html" 
-                width="100%" 
-                height="400" 
-                frameborder="0" 
-                scrolling="yes" 
-                title="Leaderboard Table">
-            </iframe>
-        </div>
-
-        <div id="event-locations" class="section fade-section">
-            <h2>🏟️ Event Locations</h2>
-            <div class="location-map">
-                <img src="476722956_942546187992853_7182961808092369392_n.jpg" 
-                     alt="Tinubdan 2025 Event Locations Map" 
-                     class="full-width-map" 
-                     title="Event Locations Across Venues">
-            </div>
-        </div>
-
-        <div id="game-schedule" class="section fade-section">
-            <h2>📅 Game Schedule</h2>
-            <iframe 
-                src="game-schedule.html" 
-                width="100%" 
-                height="500" 
-                frameborder="0" 
-                scrolling="auto" 
-                title="Game Schedule">
-            </iframe>
-        </div>
-
-        <div id="event-results" class="section fade-section">
-            <h2>🏅 Event Results</h2>
-            <iframe 
-                src="event-result.html" 
-                width="100%" 
-                height="500" 
-                frameborder="0" 
-                scrolling="auto" 
-                title="Event Results">
-            </iframe>
-        </div>
-    </div>
+    <button class="view-toggle" id="viewToggleBtn">Switch to Management View</button>
+    
+    <!-- Add logout button -->
+    <button class="logout-btn" id="logoutBtn">Logout</button>
 
     <script>
         class TinubdanEditor {
@@ -751,6 +945,45 @@
                     const speed = (index + 1) * 0.3;
                     leaf.style.transform = `translateY(${scrollPosition * speed}px) rotate(${45 * (index + 1)}deg)`;
                 });
+            });
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const viewToggleBtn = document.getElementById('viewToggleBtn');
+            const managementView = document.querySelector('.management-view');
+            let isManagementView = false;
+
+            viewToggleBtn.addEventListener('click', () => {
+                isManagementView = !isManagementView;
+                
+                if (isManagementView) {
+                    managementView.classList.add('active');
+                    viewToggleBtn.textContent = 'Switch to Public View';
+                } else {
+                    managementView.classList.remove('active');
+                    viewToggleBtn.textContent = 'Switch to Management View';
+                }
+            });
+
+            // Placeholder for management functionality
+            const managementButtons = [
+                'addScheduleBtn', 'editScheduleBtn', 
+                'addResultBtn', 'editResultBtn', 
+                'updateLeaderboardBtn'
+            ];
+
+            managementButtons.forEach(btnId => {
+                const btn = document.getElementById(btnId);
+                if (btn) {
+                    btn.addEventListener('click', () => {
+                        alert(`${btn.textContent} functionality to be implemented`);
+                    });
+                }
+            });
+
+            const logoutBtn = document.getElementById('logoutBtn');
+            logoutBtn.addEventListener('click', () => {
+                alert('Logout functionality to be implemented');
             });
         });
     </script>
