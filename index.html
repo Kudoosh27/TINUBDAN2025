@@ -3,72 +3,251 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tinubdan 2025 - Sports Event Management</title>
+    <title>Tinubdan 2025 - Event Overview</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Russo+One&family=Lilita+One&family=Black+Ops+One&display=swap" rel="stylesheet">
+    
     <style>
+        :root {
+            --turquoise: #40E0D0;
+            --sand: #FFE5B4;
+            --purple: #800080;
+            --gold: #FFD700;
+        }
+        
         body {
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
-            max-width: 800px;
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(180deg, var(--turquoise) 0%, var(--sand) 100%);
+            min-height: 100vh;
+        }
+
+        .palm-leaves {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .palm-leaf {
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath fill='%23228B22' d='M50,0 C70,30 90,60 90,80 C90,100 10,100 10,80 C10,60 30,30 50,0'/%3E%3C/svg%3E") no-repeat;
+            opacity: 0.2;
+            transition: transform 0.1s ease-out;
+        }
+
+        .palm-leaf:nth-child(1) { top: -50px; left: -50px; transform: rotate(45deg); }
+        .palm-leaf:nth-child(2) { top: -50px; right: -50px; transform: rotate(-45deg); }
+        .palm-leaf:nth-child(3) { bottom: -50px; left: -50px; transform: rotate(135deg); }
+        .palm-leaf:nth-child(4) { bottom: -50px; right: -50px; transform: rotate(-135deg); }
+
+        .header {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 80vh;
+            text-align: center;
+            padding: 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .title {
+            font-family: 'Black Ops One', cursive;
+            font-size: 6rem;
+            color: var(--gold);
+            text-shadow: 
+                6px 6px 0 var(--purple),
+                12px 12px 0 rgba(0,0,0,0.2);
+            margin: 1rem 0;
+            text-transform: uppercase;
+            line-height: 1.2;
+        }
+
+        .tagline {
+            font-family: 'Lilita One', cursive;
+            font-size: 2.5rem;
+            color: var(--purple);
+            text-shadow: 3px 3px 0 var(--gold);
+            margin: 2rem 0;
+            line-height: 1.4;
+        }
+
+        .container {
+            max-width: 1200px;
             margin: 0 auto;
-            padding: 20px;
-            background-color: #f4f4f4;
+            padding: 2rem;
+            position: relative;
+            z-index: 1;
         }
-        header {
-            background-color: #800080;
-            color: white;
+
+        .teams-section-title {
+            font-family: 'Lilita One', cursive;
+            color: var(--purple);
             text-align: center;
-            padding: 1rem;
+            font-size: 3rem;
+            margin-bottom: 2rem;
+            text-shadow: 2px 2px 0 var(--gold);
+            text-transform: uppercase;
+            letter-spacing: 2px;
         }
-        .content {
-            background-color: white;
-            padding: 20px;
-            border-radius: 5px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+
+        .quick-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 2rem;
         }
-        .links {
-            margin-top: 20px;
-            text-align: center;
-        }
-        .links a {
-            display: inline-block;
-            margin: 10px;
-            padding: 10px 20px;
-            background-color: #40E0D0;
+
+        .quick-link {
+            background-color: var(--purple);
             color: white;
             text-decoration: none;
-            border-radius: 5px;
+            padding: 1rem 2rem;
+            border-radius: 10px;
+            font-family: 'Russo One', sans-serif;
+            transition: transform 0.3s ease;
+        }
+
+        .quick-link:hover {
+            transform: scale(1.05);
+            background-color: var(--gold);
+            color: var(--purple);
+        }
+
+        .team-emblems {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .team-emblem-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .team-emblem {
+            width: 150px;
+            height: 150px;
+            background-color: transparent; /* Remove white background */
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: none; /* Remove shadow */
+        }
+
+        .team-emblem img {
+            max-width: 100%; /* Adjust to fill the entire emblem */
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        .team-name {
+            margin-top: 1rem;
+            font-family: 'Russo One', sans-serif;
+            color: var(--purple);
+            text-transform: uppercase;
+        }
+
+        .institution-logos {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .institution-logo {
+            width: auto;
+            height: 100px;
+            object-fit: contain;
+            background: transparent;
+            padding: 0;
+            box-shadow: none;
+        }
+
+        .college-name {
+            font-family: 'Russo One', sans-serif;
+            font-size: 2rem;
+            color: #000;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-align: center;
+        }
+
+        .tagline {
+            font-family: 'Lilita One', cursive;
+            font-size: 2.5rem;
+            color: var(--purple);
+            text-shadow: 3px 3px 0 var(--gold);
+            margin: 2rem 0;
+            line-height: 1.4;
+            text-align: center;
         }
     </style>
 </head>
 <body>
-    <header>
-        <h1>Tinubdan 2025 Sports Event</h1>
-    </header>
-    
-    <div class="content">
-        <h2>About the Event</h2>
-        <p>Tinubdan 2025 is a comprehensive sports event featuring multiple disciplines across various venues. This platform provides an interactive way to manage and view game schedules, event results, and participant information.</p>
-        
-        <h3>Event Highlights</h3>
-        <ul>
-            <li>Multiple Sports Disciplines</li>
-            <li>13 Unique Venues</li>
-            <li>Interactive Schedule Management</li>
-            <li>Real-time Event Results</li>
-        </ul>
-        
-        <h3>Available Pages</h3>
-        <ul>
-            <li>Game Schedule</li>
-            <li>Event Results</li>
-            <li>Official Event Information</li>
-        </ul>
+    <div class="palm-leaves">
+        <div class="palm-leaf"></div>
+        <div class="palm-leaf"></div>
+        <div class="palm-leaf"></div>
+        <div class="palm-leaf"></div>
     </div>
-    
-    <div class="links">
-        <a href="game-schedule.html">View Game Schedule</a>
-        <a href="event-result.html">Check Event Results</a>
-        <a href="tinubdan-official.html">Official Event Page</a>
+
+    <div class="header">
+        <div class="institution-logos">
+            <img src="student_council-removebg-preview.png" alt="South Philippine Adventist College Student Council Logo" class="institution-logo">
+        </div>
+        <div class="college-name">SOUTH PHILIPPINE ADVENTIST COLLEGE</div>
+        <h1 class="title">TINUBDAN 2025</h1>
+        <h2 class="tagline">Bulawanong Kagahapon,<br>Atong Pasidunggan Karon</h2>
+    </div>
+    <div class="container">
+        <h2 class="teams-section-title">Participating Teams</h2>
+        
+        <div class="team-emblems">
+            <div class="team-emblem-container">
+                <div class="team-emblem">
+                    <img src="red_siargao-removebg-preview.png" alt="Red Siargao Team" />
+                </div>
+                <div class="team-name">Red Siargao</div>
+            </div>
+            <div class="team-emblem-container">
+                <div class="team-emblem">
+                    <img src="green_palawan-removebg-preview.png" alt="Green Palawan Team" />
+                </div>
+                <div class="team-name">Green Palawan</div>
+            </div>
+            <div class="team-emblem-container">
+                <div class="team-emblem">
+                    <img src="yellow_camiguin-removebg-preview.png" alt="Yellow Camiguin Team" />
+                </div>
+                <div class="team-name">Yellow Camiguin</div>
+            </div>
+            <div class="team-emblem-container">
+                <div class="team-emblem">
+                    <img src="blue_boracay-removebg-preview.png" alt="Blue Boracay Team" />
+                </div>
+                <div class="team-name">Blue Boracay</div>
+            </div>
+        </div>
+
+        <div class="quick-links">
+            <a href="game-schedule.html" class="quick-link">Game Schedule</a>
+            <a href="event-result.html" class="quick-link">Event Results</a>
+            <a href="tinubdan-official.html" class="quick-link">Official Page</a>
+        </div>
     </div>
 </body>
 </html>
