@@ -111,6 +111,27 @@
             font-family: 'Russo One', sans-serif;
             margin-top: 1rem;
         }
+
+        .landing-page-return {
+            margin-top: 1rem;
+            text-align: center;
+        }
+
+        .return-btn {
+            display: inline-block;
+            text-decoration: none;
+            background-color: var(--turquoise);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 10px;
+            font-family: 'Russo One', sans-serif;
+            transition: transform 0.3s ease, background-color 0.3s ease;
+        }
+
+        .return-btn:hover {
+            background-color: var(--purple);
+            transform: scale(1.05);
+        }
     </style>
     <script src="auth.js"></script>
 </head>
@@ -123,13 +144,17 @@
     </div>
 
     <div class="login-container">
-        <h1 class="title">LOGIN</h1>
+        <h1 class="title">TINUBDAN 2025</h1>
         <form id="login-form">
             <input type="text" id="username" placeholder="Username" required>
             <input type="password" id="password" placeholder="Password" required>
-            <button type="submit">Enter</button>
+            <button type="submit">Login</button>
         </form>
         <div id="error-message"></div>
+        
+        <div class="landing-page-return">
+            <a href="index.html" class="return-btn">Back to Landing Page</a>
+        </div>
     </div>
 </body>
 </html>
